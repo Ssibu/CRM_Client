@@ -1,3 +1,4 @@
+
 // components/MenuTable/MenuTable.jsx
 import React, { useEffect, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
@@ -9,7 +10,7 @@ import MenuTableBody from "./MenuTableBody";
 
 // ✅ Helper: highlight search matches
 const highlightMatch = (text, query) => {
-  if (!query) return text;
+  if (!query || typeof text !== 'string') return text;
   const regex = new RegExp(`(${query})`, "gi");
   return text.split(regex).map((part, i) =>
     part.toLowerCase() === query.toLowerCase() ? (
@@ -22,9 +23,9 @@ const highlightMatch = (text, query) => {
   );
 };
 
-const MenuTable = ({ Ltext, Rtext, data = [] }) => {
+const MenuTable = ({ Ltext, Rtext, data = [], columns = [], addPath  }) => {
   const [loading, setLoading] = useState(true);
-  const [menus, setMenus] = useState([]);
+  const [items, setItems] = useState([]);
   const [entriesPerPage, setEntriesPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
@@ -34,10 +35,9 @@ const MenuTable = ({ Ltext, Rtext, data = [] }) => {
 
   // Load data
   useEffect(() => {
-    setTimeout(() => {
-      setMenus(data || []);
+      setItems(data || []);
       setLoading(false);
-    }, 1500);
+  
   }, [data]);
 
   // Debounce search
@@ -46,26 +46,37 @@ const MenuTable = ({ Ltext, Rtext, data = [] }) => {
     return () => clearTimeout(timer);
   }, [searchTerm]);
 
-  // Filter menus
-  const filteredMenus = useMemo(() => {
-    return menus.filter(
-      (item) =>
-        item.en.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
-        item.od.toLowerCase().includes(debouncedSearch.toLowerCase())
+  // Filter items based on searchable columns
+  const filteredItems = useMemo(() => {
+    if (!debouncedSearch) return items;
+    return items.filter((item) =>
+      columns.some((column) => {
+        if (column.isSearchable) {
+          const value = item[column.accessor];
+          return (
+            value &&
+            value.toString().toLowerCase().includes(debouncedSearch.toLowerCase())
+          );
+        }
+        return false;
+      })
     );
-  }, [menus, debouncedSearch]);
+  }, [items, debouncedSearch, columns]);
 
   // Pagination logic
-  const totalPages = Math.ceil(filteredMenus.length / entriesPerPage);
-  const paginatedMenus = useMemo(() => {
+  const totalPages = Math.ceil(filteredItems.length / entriesPerPage);
+  const paginatedItems = useMemo(() => {
     const start = (currentPage - 1) * entriesPerPage;
-    return filteredMenus.slice(start, start + entriesPerPage);
-  }, [filteredMenus, entriesPerPage, currentPage]);
+    return filteredItems.slice(start, start + entriesPerPage);
+  }, [filteredItems, entriesPerPage, currentPage]);
 
   // Save new sort order
   const handleSaveOrder = (newItems) => {
-    setMenus(newItems);
+    setItems(newItems);
   };
+
+    const handleAdd = addPath ? () => navigate(addPath) : null;
+
 
   return (
     <div className="p-4 bg-white shadow rounded-xl overflow-x-auto">
@@ -73,7 +84,8 @@ const MenuTable = ({ Ltext, Rtext, data = [] }) => {
       <TableHeader
         Ltext={Ltext}
         Rtext={Rtext}
-        onAdd={() => navigate("/admin/membership")}
+                onAdd={handleAdd}
+
         onOpenSort={() => setShowSortModal(true)}
       />
 
@@ -89,7 +101,8 @@ const MenuTable = ({ Ltext, Rtext, data = [] }) => {
       {/* Table Component */}
       <MenuTableBody
         loading={loading}
-        data={paginatedMenus}
+        columns={columns}
+        data={paginatedItems}
         entriesPerPage={entriesPerPage}
         currentPage={currentPage}
         highlightMatch={highlightMatch}
@@ -101,7 +114,7 @@ const MenuTable = ({ Ltext, Rtext, data = [] }) => {
         currentPage={currentPage}
         setCurrentPage={setCurrentPage}
         totalPages={totalPages}
-        totalItems={filteredMenus.length}
+        totalItems={filteredItems.length}
         perPage={entriesPerPage}
       />
 
@@ -109,7 +122,7 @@ const MenuTable = ({ Ltext, Rtext, data = [] }) => {
       <SortMenuController
         open={showSortModal}
         onClose={() => setShowSortModal(false)}
-        items={menus}
+        items={items}
         onSave={handleSaveOrder}
       />
     </div>
