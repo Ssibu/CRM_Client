@@ -29,7 +29,7 @@ const MenuTableBody = ({
           ? Array.from({ length: entriesPerPage }).map((_, idx) => (
               <SkeletonRow key={idx} columns={columns} />
             ))
-          : data.map((item, idx) => (
+          : (Array.isArray(data) && data.map((item, idx) => (
               <TableRow
                 key={item.id}
                 item={item}
@@ -45,7 +45,7 @@ const MenuTableBody = ({
                     index: idx,
                 }}
               />
-            ))}
+            )))}
       </tbody>
     </table>
   );
