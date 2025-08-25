@@ -2,18 +2,11 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-
-// --- Import your reusable components ---
-// Note: Adjust the paths if your file structure is different.
 import Header from "../../Components/Add/Header";
 import FormActions from "../../Components/Add/FormActions";
 import FormField from "../../Components/TextEditor/FormField";
 import DescriptionFields from "../../Components/Add/DescriptionFields";
-
-// API Endpoint for Act & Rules
-const API_URL = "http://localhost:8080/api/act-and-rules"; // Adjust port if needed
-
-// --- Composite Component for Title Fields ---
+const API_URL = "http://localhost:8080/api/act-and-rules"; 
 const FormFieldsGroup = ({ formData, onInputChange }) => (
   <div className="bg-white p-6 rounded-lg shadow-md grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
     <FormField
@@ -32,8 +25,6 @@ const FormFieldsGroup = ({ formData, onInputChange }) => (
     />
   </div>
 );
-
-// --- Main Page Component ---
 const AddActAndRuleForm = () => {
   const [formData, setFormData] = useState({
     titleEnglish: "",
@@ -71,7 +62,7 @@ const AddActAndRuleForm = () => {
     try {
       await axios.post(API_URL, formData);
       alert("Act & Rule created successfully!");
-      navigate("/admin/workflow/act-and-rules"); // Navigate back to the list
+      navigate("/admin/workflow/act-and-rules"); 
     } catch (error) {
       console.error("Error creating Act & Rule:", error);
       alert("Failed to create Act & Rule. Please check the console.");
