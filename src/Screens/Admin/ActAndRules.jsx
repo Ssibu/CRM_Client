@@ -1,47 +1,73 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaEdit, FaTimes } from 'react-icons/fa';
 import { Trash2 } from 'lucide-react';
-import MenuTable from "../../Components/Menu/MenuTable"; // Adjust path to your reusable component
-import DeleteConfirmationModal from "../../Components/DeleteConfirmationModal/DeleteConfirmationModal"; // Adjust path to your modal
+import axios from 'axios';
 
-// --- Dummy Data that matches the Act & Rules structure ---
-const dummyData = [
-    { id: 1, titleEnglish: "The Right to Information Act, 2005", titleOdia: "ସୂଚନା ଅଧିକାର ଅଧିନିୟମ, ୨୦୦୫", status: "Active" },
-    { id: 2, titleEnglish: "Clinical Establishments (Registration and Regulation) Act, 2010", titleOdia: "କ୍ଲିନିକାଲ୍ ଏଷ୍ଟାବ୍ଲିଶମେଣ୍ଟସ୍ ଅଧିନିୟମ, ୨୦୧୦", status: "Active" },
-    { id: 3, titleEnglish: "The Odisha Clinical Establishments Act, 1990", titleOdia: "ଓଡ଼ିଶା କ୍ଲିନିକାଲ୍ ଏଷ୍ଟାବ୍ଲିଶମେଣ୍ଟସ୍ ଅଧିନିୟମ, ୧୯୯୦", status: "Inactive" },
-    { id: 4, titleEnglish: "Medical Termination of Pregnancy Act, 1971", titleOdia: "ଗର୍ଭପାତ ଅଧିନିୟମ, ୧୯୭୧", status: "Active" },
-    { id: 5, titleEnglish: "The Epidemic Diseases Act, 1897", titleOdia: "ମହାମାରୀ ରୋଗ ଅଧିନିୟମ, ୧୮୯୭", status: "Active" },
-];
+// --- Import your reusable components ---
+import MenuTable from "../../Components/Menu/MenuTable"; // Adjust path if needed
+import DeleteConfirmationModal from "../../Components/DeleteConfirmationModal/DeleteConfirmationModal"; // Adjust path if needed
+import SortMenuController from '../../Components/SortModal/SortMenuController'; // Adjust path if needed
+
+// Define the API endpoint for Act & Rules
+const API_URL = "http://localhost:8080/api/act-and-rules"; // Adjust port if needed
 
 const ActAndRules = () => {
-  const [data, setData] = useState(dummyData);
+  const [data, setData] = useState([]);
   const navigate = useNavigate();
   
-  // State for managing the delete modal
-  const [modalState, setModalState] = useState({ isOpen: false, itemToDelete: null });
+  // State for managing modals
+  const [modalState, setModalState] = useState({ isDeleteOpen: false, itemToDelete: null });
+  const [showSortModal, setShowSortModal] = useState(false);
 
-  // Handler to open the modal
-  const openDeleteModal = (item) => {
-    setModalState({ isOpen: true, itemToDelete: item });
-  };
-
-  // Handler to close the modal
-  const closeDeleteModal = () => {
-    setModalState({ isOpen: false, itemToDelete: null });
-  };
-
-  // Handler to confirm deletion
-  const handleDeleteConfirm = () => {
-    if (modalState.itemToDelete) {
-      // For now, we'll just filter the dummy data.
-      setData(prevData => prevData.filter(item => item.id !== modalState.itemToDelete.id));
-      console.log(`Deleting item: ${modalState.itemToDelete.titleEnglish}`);
+  // --- API Functions ---
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(API_URL);
+      setData(response.data);
+    } catch (error) {
+      console.error("Error fetching Act & Rules:", error);
+      alert("Failed to fetch data from the server.");
     }
   };
 
+  const handleDeleteConfirm = async () => {
+    if (modalState.itemToDelete) {
+      try {
+        await axios.delete(`${API_URL}/${modalState.itemToDelete.id}`);
+        fetchData(); // Refetch data to update the list after deletion
+        alert("Item deleted successfully!");
+      } catch (error) {
+        console.error("Error deleting item:", error);
+        alert("Failed to delete item.");
+      } finally {
+        closeDeleteModal();
+      }
+    }
+  };
+
+  const handleSaveOrder = async (newOrder) => {
+    const orderIds = newOrder.map(item => item.id);
+    try {
+      await axios.put(`${API_URL}/order`, { order: orderIds });
+      setData(newOrder); // Update state immediately for a smooth UX
+      setShowSortModal(false); // Close the modal on successful save
+      alert("Order updated successfully!");
+    } catch (error) {
+      console.error("Error updating order:", error);
+      alert("Failed to update order.");
+    }
+  };
+  
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  // Modal handler functions
+  const openDeleteModal = (item) => setModalState({ isDeleteOpen: true, itemToDelete: item });
+  const closeDeleteModal = () => setModalState({ isDeleteOpen: false, itemToDelete: null });
+
   // --- Define the table structure for Act & Rules ---
-  // The accessor properties MUST match the keys in dummyData
   const columns = useMemo(() => [
     {
       header: "SL.No",
@@ -94,10 +120,22 @@ const ActAndRules = () => {
         data={data}
         columns={columns}
         addPath="/admin/workflow/act-and-rules/add"
+        onOpenSort={() => setShowSortModal(true)} // Pass the handler to show the sort button
       />
 
-      {/* --- Render the modal conditionally based on state --- */}
-      {modalState.isOpen && (
+      {/* Render the Sort Controller Modal */}
+      <SortMenuController
+        open={showSortModal}
+        onClose={() => setShowSortModal(false)}
+        items={data}
+        onSave={handleSaveOrder}
+        title="Reorder Act & Rules"
+        displayKey="titleEnglish"
+        secondaryKey="titleOdia"
+      />
+
+      {/* Render the Delete Confirmation Modal */}
+      {modalState.isDeleteOpen && (
         <DeleteConfirmationModal
           onClose={closeDeleteModal}
           onConfirm={handleDeleteConfirm}
