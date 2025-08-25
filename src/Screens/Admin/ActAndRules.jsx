@@ -3,16 +3,24 @@ import { useNavigate } from 'react-router-dom';
 import { FaEdit, FaTimes } from 'react-icons/fa';
 import { Trash2 } from 'lucide-react';
 import axios from 'axios';
-import MenuTable from "../../Components/Menu/MenuTable"; 
-import DeleteConfirmationModal from "../../Components/DeleteConfirmationModal/DeleteConfirmationModal"; 
-import SortMenuController from '../../Components/SortModal/SortMenuController'; 
-const API_URL = "http://localhost:8080/api/act-and-rules"; 
+
+// --- Import your reusable components ---
+import MenuTable from "../../Components/Menu/MenuTable";
+import DeleteConfirmationModal from "../../Components/DeleteConfirmationModal/DeleteConfirmationModal";
+import SortMenuController from '../../Components/SortModal/SortMenuController';
+
+// Define the API endpoint for Act & Rules
+const API_URL = "http://localhost:8080/api/act-and-rules";
 
 const ActAndRules = () => {
   const [data, setData] = useState([]);
   const navigate = useNavigate();
+  
+  // State for managing modals
   const [modalState, setModalState] = useState({ isDeleteOpen: false, itemToDelete: null });
   const [showSortModal, setShowSortModal] = useState(false);
+
+  // --- API Functions ---
   const fetchData = async () => {
     try {
       const response = await axios.get(API_URL);
@@ -27,7 +35,7 @@ const ActAndRules = () => {
     if (modalState.itemToDelete) {
       try {
         await axios.delete(`${API_URL}/${modalState.itemToDelete.id}`);
-        fetchData(); 
+        fetchData(); // Refetch data to update the list
         alert("Item deleted successfully!");
       } catch (error) {
         console.error("Error deleting item:", error);
@@ -37,25 +45,29 @@ const ActAndRules = () => {
       }
     }
   };
-
+  
   const handleSaveOrder = async (newOrder) => {
     const orderIds = newOrder.map(item => item.id);
     try {
       await axios.put(`${API_URL}/order`, { order: orderIds });
-      setData(newOrder); 
-      setShowSortModal(false); 
+      setData(newOrder);
+      setShowSortModal(false);
       alert("Order updated successfully!");
     } catch (error) {
       console.error("Error updating order:", error);
       alert("Failed to update order.");
     }
   };
-  
+
   useEffect(() => {
     fetchData();
   }, []);
+
+  // Modal handler functions
   const openDeleteModal = (item) => setModalState({ isDeleteOpen: true, itemToDelete: item });
   const closeDeleteModal = () => setModalState({ isDeleteOpen: false, itemToDelete: null });
+
+  // --- Define the table structure for Act & Rules ---
   const columns = useMemo(() => [
     {
       header: "SL.No",
@@ -108,8 +120,9 @@ const ActAndRules = () => {
         data={data}
         columns={columns}
         addPath="/admin/workflow/act-and-rules/add"
-        onOpenSort={() => setShowSortModal(true)} 
+        onOpenSort={() => setShowSortModal(true)}
       />
+
       <SortMenuController
         open={showSortModal}
         onClose={() => setShowSortModal(false)}
@@ -119,6 +132,7 @@ const ActAndRules = () => {
         displayKey="titleEnglish"
         secondaryKey="titleOdia"
       />
+
       {modalState.isDeleteOpen && (
         <DeleteConfirmationModal
           onClose={closeDeleteModal}

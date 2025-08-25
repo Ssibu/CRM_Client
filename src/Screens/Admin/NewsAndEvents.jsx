@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaEdit, FaTimes, FaFilePdf, FaFileWord, FaFileImage, FaFileAlt } from 'react-icons/fa';
+import { FaEdit, FaTimes, FaFilePdf, FaFileWord, FaFileImage, FaFileAlt, FaFileExcel } from 'react-icons/fa';
 import { Trash2 } from 'lucide-react';
 import axios from 'axios';
 
@@ -49,6 +49,7 @@ const NewsAndEvents = () => {
   const handleSaveOrder = async (newOrder) => {
     const orderIds = newOrder.map(item => item.id);
     try {
+      // You will need to add the /order endpoint to your newsAndEvent backend routes/controller
       await axios.put(`${API_URL}/order`, { order: orderIds });
       setData(newOrder);
       setShowSortModal(false);
@@ -96,6 +97,7 @@ const NewsAndEvents = () => {
         const getIcon = () => {
           if (['pdf'].includes(extension)) return <FaFilePdf className="text-red-500" size={22} />;
           if (['doc', 'docx'].includes(extension)) return <FaFileWord className="text-blue-500" size={22} />;
+          if (['xls', 'xlsx'].includes(extension)) return <FaFileExcel className="text-green-700" size={22} />;
           if (['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(extension)) return <FaFileImage className="text-green-500" size={22} />;
           return <FaFileAlt className="text-gray-500" size={22} />;
         };

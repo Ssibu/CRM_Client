@@ -35,8 +35,8 @@ import UserManagement from "../Screens/Admin/UserManagement";
 import DirectorsDesk from "../Screens/Admin/DirectorsDesk";
 
 // Import the new form component
-import AddNewsAndEventForm from "../Screens/Admin/AddNewsAndEventForm"; // Assuming this is the correct path
-import AddActAndRuleForm from "../Screens/Admin/AddActAndRuleForm";
+import NewsAndEventForm from "../Screens/Admin/NewsAndEventForm"; // Assuming this is the correct path
+import ActAndRuleForm from "../Screens/Admin/ActAndRuleForm";
 import AddFooterlinkForm from "../Screens/Admin/AddFooterlinkForm"
 
 const userRoutes = [
@@ -69,13 +69,23 @@ const userRoutes = [
   // ===== NEW ROUTE ADDED HERE =====
   {
     path: "/admin/workflow/news-and-events/add",
-    component: <AddNewsAndEventForm />,
+    component: <NewsAndEventForm />,
+  },
+  {
+    path: "/admin/workflow/news-and-events/edit/:id",
+    component: <NewsAndEventForm />,
   },
   // ================================
   { path: "/admin/workflow/act-and-rules", component: <ActAndRules /> },
   {
     path: "/admin/workflow/act-and-rules/add",
-    component: <AddActAndRuleForm />,
+    component: <ActAndRuleForm />,
+  },
+
+  // Route to the "Edit" form, with a dynamic ':id' parameter
+  {
+    path: "/admin/workflow/act-and-rules/edit/:id",
+    component: <ActAndRuleForm />,
   },
   { path: "/admin/workflow/footerlink", component: <Footerlink /> },
   {
