@@ -39,6 +39,7 @@ import NewsAndEventForm from "../Screens/Admin/NewsAndEventForm"; // Assuming th
 import ActAndRuleForm from "../Screens/Admin/ActAndRuleForm";
 import FooterlinkForm from "../Screens/Admin/FooterlinkForm";
 import PolicyForm from "../Screens/Admin/PolicyForm";   
+import SchemeForm from "../Screens/Admin/SchemeForm";
 
 const userRoutes = [
   { path: "/admin/dashboard", component: <Dashboard /> },
