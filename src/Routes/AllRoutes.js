@@ -37,7 +37,7 @@ import DirectorsDesk from "../Screens/Admin/DirectorsDesk";
 // Import the new form component
 import NewsAndEventForm from "../Screens/Admin/NewsAndEventForm"; // Assuming this is the correct path
 import ActAndRuleForm from "../Screens/Admin/ActAndRuleForm";
-import AddFooterlinkForm from "../Screens/Admin/AddFooterlinkForm"
+import FooterlinkForm from "../Screens/Admin/FooterlinkForm";
 
 const userRoutes = [
   { path: "/admin/dashboard", component: <Dashboard /> },
@@ -90,7 +90,11 @@ const userRoutes = [
   { path: "/admin/workflow/footerlink", component: <Footerlink /> },
   {
     path: "/admin/workflow/footerlink/add",
-    component: <AddFooterlinkForm />,
+    component: <FooterlinkForm />, // Points to the new form
+  },
+  {
+    path: "/admin/workflow/footerlink/edit/:id",
+    component: <FooterlinkForm />, // Also points to the new form
   },
   // Generate Link route
   { path: "/admin/generate-link", component: <GenerateLink /> },
