@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaEdit, FaTimes, FaFilePdf, FaFileWord, FaFileImage, FaFileAlt, FaFileExcel } from 'react-icons/fa';
-import { Trash2 } from 'lucide-react';
+import { FaEdit, FaToggleOn, FaToggleOff, FaFilePdf, FaFileWord, FaFileImage, FaFileAlt, FaFileExcel } from 'react-icons/fa';
+import { VscVmActive } from "react-icons/vsc";
 import axios from 'axios';
 
 // --- Import your reusable components ---
@@ -17,7 +17,7 @@ const NewsAndEvents = () => {
   const navigate = useNavigate();
   
   // State for managing modals
-  const [modalState, setModalState] = useState({ isDeleteOpen: false, itemToDelete: null });
+  const [modalState, setModalState] = useState({ isOpen: false, itemToToggle: null, nextStatus: '' });
   const [showSortModal, setShowSortModal] = useState(false);
 
   // --- API Functions ---
@@ -27,21 +27,20 @@ const NewsAndEvents = () => {
       setData(response.data);
     } catch (error) {
       console.error("Error fetching News & Events:", error);
-      alert("Failed to fetch data from the server.");
     }
   };
 
-  const handleDeleteConfirm = async () => {
-    if (modalState.itemToDelete) {
+  const handleToggleConfirm = async () => {
+    if (modalState.itemToToggle) {
       try {
-        await axios.delete(`${API_URL}/${modalState.itemToDelete.id}`);
-        fetchData(); // Refetch data to update the list
-        alert("Event deleted successfully!");
+        await axios.patch(`${API_URL}/status/${modalState.itemToToggle.id}`);
+        fetchData(); // Refetch all data to update the list
+        alert(`Status changed to "${modalState.nextStatus}" successfully!`);
       } catch (error) {
-        console.error("Error deleting event:", error);
-        alert("Failed to delete event.");
+        console.error("Error toggling status:", error);
+        alert("Failed to update status.");
       } finally {
-        closeDeleteModal();
+        closeToggleModal();
       }
     }
   };
@@ -49,14 +48,11 @@ const NewsAndEvents = () => {
   const handleSaveOrder = async (newOrder) => {
     const orderIds = newOrder.map(item => item.id);
     try {
-      // You will need to add the /order endpoint to your newsAndEvent backend routes/controller
       await axios.put(`${API_URL}/order`, { order: orderIds });
       setData(newOrder);
       setShowSortModal(false);
-      alert("Order updated successfully!");
     } catch (error) {
       console.error("Error updating order:", error);
-      alert("Failed to update order.");
     }
   };
 
@@ -64,30 +60,23 @@ const NewsAndEvents = () => {
     fetchData();
   }, []);
 
-  const openDeleteModal = (item) => setModalState({ isDeleteOpen: true, itemToDelete: item });
-  const closeDeleteModal = () => setModalState({ isDeleteOpen: false, itemToDelete: null });
+  // Modal handler functions
+  const openToggleModal = (item) => {
+    const nextStatus = item.status === 'Active' ? 'Inactive' : 'Active';
+    setModalState({ isOpen: true, itemToToggle: item, nextStatus: nextStatus });
+  };
+  const closeToggleModal = () => setModalState({ isOpen: false, itemToToggle: null, nextStatus: '' });
 
-  // --- Define the table structure for News & Events ---
+  // --- Define the table structure ---
   const columns = useMemo(() => [
     {
       header: "SL.No",
       cell: ({ pageContext }) => 
         (pageContext.currentPage - 1) * pageContext.entriesPerPage + pageContext.index + 1,
     },
-    {
-      header: "Title (In English)",
-      accessor: "titleEnglish",
-      isSearchable: true,
-    },
-    {
-      header: "Title (In Odia)",
-      accessor: "titleOdia",
-      isSearchable: true,
-    },
-    {
-      header: "Event Date",
-      accessor: "eventDate",
-    },
+    { header: "Title (In English)", accessor: "titleEnglish", isSearchable: true },
+    { header: "Title (In Odia)", accessor: "titleOdia", isSearchable: true },
+    { header: "Event Date", accessor: "eventDate" },
     {
       header: "Document",
       accessor: "document",
@@ -102,11 +91,7 @@ const NewsAndEvents = () => {
           return <FaFileAlt className="text-gray-500" size={22} />;
         };
         const fileUrl = `http://localhost:8080/uploads/${filename}`;
-        return (
-          <a href={fileUrl} target="_blank" rel="noopener noreferrer" title={filename}>
-            {getIcon()}
-          </a>
-        );
+        return <a href={fileUrl} target="_blank" rel="noopener noreferrer" title={filename}>{getIcon()}</a>;
       },
     },
     {
@@ -114,9 +99,7 @@ const NewsAndEvents = () => {
       accessor: "status",
       cell: ({ row }) => (
         <span className={`px-2 py-1 text-xs font-semibold rounded-full ${
-          row.original.status === 'Active' 
-            ? 'bg-green-100 text-green-700' 
-            : 'bg-red-100 text-red-700'
+          row.original.status === 'Active' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
         }`}>
           {row.original.status}
         </span>
@@ -126,10 +109,18 @@ const NewsAndEvents = () => {
       header: "Action",
       cell: ({ row }) => (
         <div className="flex space-x-2">
-          <button onClick={() => openDeleteModal(row.original)} className="text-red-500 hover:text-red-700" title="Delete">
-            <FaTimes />
+          <button 
+            onClick={() => openToggleModal(row.original)} 
+            className={row.original.status === 'Active' ? 'text-green-500 hover:text-green-700' : 'text-red-500 hover:text-red-700'} 
+            title={`Set to ${row.original.status === 'Active' ? 'Inactive' : 'Active'}`}
+          >
+            {row.original.status === 'Active' ? <FaToggleOn size={20} /> : <FaToggleOff size={20} />}
           </button>
-          <button onClick={() => navigate(`/admin/workflow/news-and-events/edit/${row.original.id}`)} className="text-blue-500 hover:text-blue-700" title="Edit">
+          <button 
+            onClick={() => navigate(`/admin/workflow/news-and-events/edit/${row.original.id}`)} 
+            className="text-blue-500 hover:text-blue-700" 
+            title="Edit"
+          >
             <FaEdit />
           </button>
         </div>
@@ -158,13 +149,15 @@ const NewsAndEvents = () => {
         secondaryKey="titleOdia"
       />
 
-      {modalState.isDeleteOpen && (
+      {modalState.isOpen && (
         <DeleteConfirmationModal
-          onClose={closeDeleteModal}
-          onConfirm={handleDeleteConfirm}
-          title="Confirm Deletion"
-          message={`Are you sure you want to delete "${modalState.itemToDelete?.titleEnglish}"?`}
-          icon={Trash2}
+          onClose={closeToggleModal}
+          onConfirm={handleToggleConfirm}
+          title="Confirm Status Change"
+          message={`Are you sure you want to change the status of "${modalState.itemToToggle?.titleEnglish}" to "${modalState.nextStatus}"?`}
+          icon={VscVmActive}
+          confirmText={`Yes, Set to ${modalState.nextStatus}`}
+          cancelText="No, Cancel"
         />
       )}
     </div>
