@@ -112,6 +112,14 @@ const userRoutes = [
   { path: "/admin/notifications/notice", component: <Notice /> },
   { path: "/admin/notifications/advertisement", component: <Advertisement /> },
   { path: "/admin/notifications/scheme", component: <Scheme /> },
+  {
+    path: "/admin/notifications/scheme/add",
+    component: <SchemeForm />,
+  },
+  {
+    path: "/admin/notifications/scheme/edit/:id",
+    component: <SchemeForm />,
+  },
   { path: "/admin/notifications/policy", component: <Policy /> },
   {
     path: "/admin/notifications/policy/add",
