@@ -38,6 +38,7 @@ import DirectorsDesk from "../Screens/Admin/DirectorsDesk";
 import NewsAndEventForm from "../Screens/Admin/NewsAndEventForm"; // Assuming this is the correct path
 import ActAndRuleForm from "../Screens/Admin/ActAndRuleForm";
 import FooterlinkForm from "../Screens/Admin/FooterlinkForm";
+import PolicyForm from "../Screens/Admin/PolicyForm";   
 
 const userRoutes = [
   { path: "/admin/dashboard", component: <Dashboard /> },
@@ -111,6 +112,14 @@ const userRoutes = [
   { path: "/admin/notifications/advertisement", component: <Advertisement /> },
   { path: "/admin/notifications/scheme", component: <Scheme /> },
   { path: "/admin/notifications/policy", component: <Policy /> },
+  {
+    path: "/admin/notifications/policy/add",
+    component: <PolicyForm />,
+  },
+  {
+    path: "/admin/notifications/policy/edit/:id",
+    component: <PolicyForm />,
+  },
   { path: "/admin/notifications/bed-strength", component: <BedStrength /> },
   { path: "/admin/notifications/forms", component: <Forms /> },
   { path: "/admin/notifications/holiday", component: <Holiday /> },
