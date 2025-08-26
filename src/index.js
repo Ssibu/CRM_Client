@@ -4,10 +4,17 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
+// --- 1. IMPORT YOUR MODAL PROVIDER ---
+// Make sure the path is correct
+import { ModalProvider } from './context/ModalProvider'; 
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />
+    {/* --- 2. WRAP YOUR APP WITH THE PROVIDER --- */}
+    <ModalProvider>
+      <App />
+    </ModalProvider>
   </React.StrictMode>
 );
 
