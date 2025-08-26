@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaEdit, FaTimes } from 'react-icons/fa';
-import { Trash2 } from 'lucide-react';
+import { FaEdit, FaToggleOn, FaToggleOff } from 'react-icons/fa';
+import { VscVmActive } from "react-icons/vsc";
 import axios from 'axios';
 
 // --- Import your reusable components ---
@@ -17,7 +17,7 @@ const Footerlink = () => {
   const navigate = useNavigate();
   
   // State for managing modals
-  const [modalState, setModalState] = useState({ isDeleteOpen: false, itemToDelete: null });
+  const [modalState, setModalState] = useState({ isOpen: false, itemToToggle: null, nextStatus: '' });
   const [showSortModal, setShowSortModal] = useState(false);
 
   // --- API Functions ---
@@ -27,21 +27,20 @@ const Footerlink = () => {
       setData(response.data);
     } catch (error) {
       console.error("Error fetching footer links:", error);
-      alert("Failed to fetch data from the server.");
     }
   };
 
-  const handleDeleteConfirm = async () => {
-    if (modalState.itemToDelete) {
+  const handleToggleConfirm = async () => {
+    if (modalState.itemToToggle) {
       try {
-        await axios.delete(`${API_URL}/${modalState.itemToDelete.id}`);
-        fetchData(); // Refetch data to update the list
-        alert("Link deleted successfully!");
+        await axios.patch(`${API_URL}/status/${modalState.itemToToggle.id}`);
+        fetchData(); // Refetch all data to update the list
+        alert(`Status changed to "${modalState.nextStatus}" successfully!`);
       } catch (error) {
-        console.error("Error deleting item:", error);
-        alert("Failed to delete link.");
+        console.error("Error toggling status:", error);
+        alert("Failed to update status.");
       } finally {
-        closeDeleteModal();
+        closeToggleModal();
       }
     }
   };
@@ -52,10 +51,8 @@ const Footerlink = () => {
       await axios.put(`${API_URL}/order`, { order: orderIds });
       setData(newOrder);
       setShowSortModal(false);
-      alert("Order updated successfully!");
     } catch (error) {
       console.error("Error updating order:", error);
-      alert("Failed to update order.");
     }
   };
 
@@ -64,38 +61,28 @@ const Footerlink = () => {
   }, []);
 
   // Modal handler functions
-  const openDeleteModal = (item) => setModalState({ isDeleteOpen: true, itemToDelete: item });
-  const closeDeleteModal = () => setModalState({ isDeleteOpen: false, itemToDelete: null });
+  const openToggleModal = (item) => {
+    const nextStatus = item.status === 'Active' ? 'Inactive' : 'Active';
+    setModalState({ isOpen: true, itemToToggle: item, nextStatus: nextStatus });
+  };
+  const closeToggleModal = () => setModalState({ isOpen: false, itemToToggle: null, nextStatus: '' });
 
-  // --- Define the table structure for Footer Links ---
+  // --- Define the table structure ---
   const columns = useMemo(() => [
     {
       header: "SL.No",
       cell: ({ pageContext }) => 
         (pageContext.currentPage - 1) * pageContext.entriesPerPage + pageContext.index + 1,
     },
-    {
-      header: "English Link",
-      accessor: "englishLinkText",
-      isSearchable: true,
-    },
-    {
-      header: "Odia Link",
-      accessor: "odiaLinkText",
-      isSearchable: true,
-    },
-    {
-      header: "Link Type",
-      accessor: "linkType",
-    },
+    { header: "English Link", accessor: "englishLinkText", isSearchable: true },
+    { header: "Odia Link", accessor: "odiaLinkText", isSearchable: true },
+    { header: "Link Type", accessor: "linkType" },
     {
       header: "Status",
       accessor: "status",
       cell: ({ row }) => (
         <span className={`px-2 py-1 text-xs font-semibold rounded-full ${
-          row.original.status === 'Active' 
-            ? 'bg-green-100 text-green-700' 
-            : 'bg-red-100 text-red-700'
+          row.original.status === 'Active' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
         }`}>
           {row.original.status}
         </span>
@@ -105,10 +92,18 @@ const Footerlink = () => {
       header: "Action",
       cell: ({ row }) => (
         <div className="flex space-x-2">
-          <button onClick={() => openDeleteModal(row.original)} className="text-red-500 hover:text-red-700" title="Delete">
-            <FaTimes />
+          <button 
+            onClick={() => openToggleModal(row.original)} 
+            className={row.original.status === 'Active' ? 'text-green-500 hover:text-green-700' : 'text-red-500 hover:text-red-700'} 
+            title={`Set to ${row.original.status === 'Active' ? 'Inactive' : 'Active'}`}
+          >
+            {row.original.status === 'Active' ? <FaToggleOn size={20} /> : <FaToggleOff size={20} />}
           </button>
-          <button onClick={() => navigate(`/admin/workflow/footerlink/edit/${row.original.id}`)} className="text-blue-500 hover:text-blue-700" title="Edit">
+          <button 
+            onClick={() => navigate(`/admin/workflow/footerlink/edit/${row.original.id}`)} 
+            className="text-blue-500 hover:text-blue-700" 
+            title="Edit"
+          >
             <FaEdit />
           </button>
         </div>
@@ -137,13 +132,15 @@ const Footerlink = () => {
         secondaryKey="odiaLinkText"
       />
 
-      {modalState.isDeleteOpen && (
+      {modalState.isOpen && (
         <DeleteConfirmationModal
-          onClose={closeDeleteModal}
-          onConfirm={handleDeleteConfirm}
-          title="Confirm Deletion"
-          message={`Are you sure you want to delete "${modalState.itemToDelete?.englishLinkText}"?`}
-          icon={Trash2}
+          onClose={closeToggleModal}
+          onConfirm={handleToggleConfirm}
+          title="Confirm Status Change"
+          message={`Are you sure you want to change the status of "${modalState.itemToToggle?.englishLinkText}" to "${modalState.nextStatus}"?`}
+          icon={VscVmActive}
+          confirmText={`Yes, Set to ${modalState.nextStatus}`}
+          cancelText="No, Cancel"
         />
       )}
     </div>
