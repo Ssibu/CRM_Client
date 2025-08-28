@@ -10,7 +10,7 @@ import DeleteConfirmationModal from "../../Components/DeleteConfirmationModal/De
 import { useServerSideTable } from '../../hooks/useServerSideTable';
 import { useModal } from '../../context/ModalProvider';
 
-const API_URL = "http://localhost:8080/api/bed-strengths";
+const API_URL = "http://localhost:7777/api/bed-strengths";
 
 const BedStrength = () => {
   const { data, refreshData, tableState } = useServerSideTable(API_URL);
