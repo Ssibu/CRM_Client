@@ -67,6 +67,7 @@ import ChatBotAnswer from "../Screens/Admin/Chatbot/ChatBotAnswer";
 import AddChatbotCategory from "../Screens/Admin/Chatbot/AddChatbotCategory";
 import AddChatBotQuestion from "../Screens/Admin/Chatbot/AddChatBotQuestion"; 
 import AddChatBotAnswer from "../Screens/Admin/Chatbot/AddChatBotAnswer";
+import BedStrengthForm from "../Screens/Admin/BedStrengthForm";
 
 const userRoutes = [
   { path: "/admin/dashboard", component: <Dashboard /> },
@@ -221,6 +222,16 @@ const userRoutes = [
 
 
   { path: "/admin/notifications/bed-strength", component: <BedStrength /> },
+  
+  {
+    path: "/admin/notifications/bed-strength/add",
+    component: <BedStrengthForm />,
+  },
+  {
+    path: "/admin/notifications/bed-strength/edit/:id",
+    component: <BedStrengthForm />,
+  },
+  
   { path: "/admin/notifications/forms", component: <Forms /> },
   {
     path: "/admin/notifications/forms/add",
