@@ -10,7 +10,7 @@ import DeleteConfirmationModal from "../../Components/DeleteConfirmationModal/De
 import { useServerSideTable } from '../../hooks/useServerSideTable';
 import { useModal } from '../../context/ModalProvider';
 
-const API_URL = "http://localhost:8080/api/policies";
+const API_URL = "http://localhost:7777/api/policies";
 
 const Policy = () => {
   // --- USE THE HOOK ---
