@@ -53,7 +53,7 @@ const Scheme = () => {
       accessor: "document",
       cell: ({ row }) => {
         const filename = row.original.document || '';
-        const fileUrl = `http://localhost:7777{filename.startsWith('/') ? '' : '/'}${filename}`;
+        const fileUrl = `http://localhost:7777${filename.startsWith('/') ? '' : '/'}${filename}`;
         const extension = filename.split('.').pop().toLowerCase();
         const getIcon = () => {
           if (['pdf'].includes(extension)) return <FaFilePdf className="text-red-500" size={22} />;

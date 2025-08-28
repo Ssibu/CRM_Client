@@ -51,7 +51,7 @@ const BedStrength = () => {
       accessor: "document",
       cell: ({ row }) => {
         const filename = row.original.document || '';
-        const fileUrl = `${process.env.REACT_APP_API_BASE_URL}${filename.startsWith('/') ? '' : '/'}${filename}`;
+        const fileUrl = `${process.env.REACT_APP_API_URL}${filename.startsWith('/') ? '' : '/'}${filename}`;
         const extension = filename.split('.').pop().toLowerCase();
         const getIcon = () => {
           if (['pdf'].includes(extension)) return <FaFilePdf className="text-red-500" size={22} />;
