@@ -47,6 +47,7 @@ import TenderListPage from "../Screens/Admin/Notifications/Tenders/TenderListPag
 import ManageCorrigendumsPage from "../Screens/Admin/Notifications/Tenders/Corrigendum/CorrigendumPage"
 import HomepageBannerList from "../Screens/Admin/ImageSetup/HomepageBannerList";
 import HomePageBannerForm from "../Screens/Admin/ImageSetup/HomePageBannerForm"
+import FormForm from "../Screens/Admin/FormForm";
 
 
 //workflow
@@ -221,6 +222,14 @@ const userRoutes = [
 
   { path: "/admin/notifications/bed-strength", component: <BedStrength /> },
   { path: "/admin/notifications/forms", component: <Forms /> },
+  {
+    path: "/admin/notifications/forms/add",
+    component: <FormForm />,
+  },
+  {
+    path: "/admin/notifications/forms/edit/:id",
+    component: <FormForm />,
+  },
   { path: "/admin/notifications/holiday", component: <Holiday /> },
   // Home configuration routes
   { path: "/admin/home-config", component: <HomeConfiguration /> },
