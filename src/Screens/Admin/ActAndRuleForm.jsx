@@ -10,7 +10,7 @@ import FormActions from "../../Components/Add/FormActions";
 import FormField from "../../Components/TextEditor/FormField";
 import DescriptionFields from "../../Components/Add/DescriptionFields";
 
-const API_URL = `${process.env.REACT_APP_API_BASE_URL}/api/act-and-rules`;
+const API_URL = `${process.env.REACT_APP_API_URL}/api/act-and-rules`;
 
 const initialState = {
   titleEnglish: "",

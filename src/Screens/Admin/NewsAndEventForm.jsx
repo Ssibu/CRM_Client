@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
+import { useModal } from "../../context/ModalProvider";
 
 // Import your reusable components
 import Header from "../../Components/Add/Header";
@@ -9,9 +10,8 @@ import FormActions from "../../Components/Add/FormActions";
 import FormField from "../../Components/TextEditor/FormField";
 import DocumentUploader from "../../Components/TextEditor/DocumentUploader";
 
-const API_URL = "http://localhost:7777/api/news-and-events";
+const API_URL = `${process.env.REACT_APP_API_URL}/api/news-and-events`;
 
-// Define the initial empty state for the form
 const initialState = {
   titleEnglish: "",
   titleOdia: "",
@@ -23,8 +23,10 @@ const NewsAndEventForm = () => {
   const { id } = useParams();
   const isEditMode = Boolean(id);
   const navigate = useNavigate();
+  const { showModal } = useModal();
 
   const [formData, setFormData] = useState(initialState);
+  const [errors, setErrors] = useState({}); // State to hold validation errors
   const [existingDocument, setExistingDocument] = useState(''); 
   const [isLoading, setIsLoading] = useState(isEditMode);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -38,33 +40,54 @@ const NewsAndEventForm = () => {
           setFormData({ titleEnglish, titleOdia, eventDate, document: null });
           setExistingDocument(document);
         } catch (error) {
-          console.error("Error fetching event data:", error);
-          alert("Failed to load event data for editing.");
+          showModal("error", "Failed to load event data for editing.");
         } finally {
           setIsLoading(false);
         }
       };
       fetchData();
     }
-  }, [id, isEditMode]);
+  }, [id, isEditMode, showModal]);
 
   const handleInputChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
+    if (errors[field]) {
+      setErrors((prev) => ({ ...prev, [field]: null }));
+    }
   };
 
   const handleFileChange = (file) => {
     setFormData((prev) => ({ ...prev, document: file }));
-    if(file) {
-        setExistingDocument('');
+    if (errors.document) {
+      setErrors((prev) => ({ ...prev, document: null }));
     }
+  };
+
+  // Validation function to check all fields
+  const validateForm = () => {
+    const newErrors = {};
+    if (!formData.titleEnglish.trim()) {
+      newErrors.titleEnglish = "English Title is required.";
+    }
+    if (!formData.titleOdia.trim()) {
+      newErrors.titleOdia = "Odia Title is required.";
+    }
+    if (!formData.eventDate) {
+      newErrors.eventDate = "Event Date is required.";
+    }
+    // A document is only required when creating, not when editing
+    if (!isEditMode && !formData.document) {
+      newErrors.document = "A document or image file is required.";
+    }
+    return newErrors;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (!isEditMode && !formData.document) {
-      alert("Please upload a document or image file.");
-      return;
+    const formErrors = validateForm();
+    if (Object.keys(formErrors).length > 0) {
+      setErrors(formErrors);
+      return; // Stop submission
     }
 
     setIsSubmitting(true);
@@ -73,22 +96,25 @@ const NewsAndEventForm = () => {
     submissionData.append("titleOdia", formData.titleOdia);
     submissionData.append("eventDate", formData.eventDate);
 
-    if (formData.document) { // Only append file if a new one is selected
+    if (formData.document) {
       submissionData.append("document", formData.document);
+      if (isEditMode) {
+        submissionData.append("oldFilePath", existingDocument);
+      }
     }
 
     try {
       if (isEditMode) {
         await axios.put(`${API_URL}/${id}`, submissionData);
-        alert("News & Event updated successfully!");
+        showModal("success", "News & Event updated successfully!");
       } else {
         await axios.post(API_URL, submissionData);
-        alert("News & Event created successfully!");
+        showModal("success", "News & Event created successfully!");
       }
       navigate("/admin/workflow/news-and-events");
     } catch (error) {
-      const errorMessage = error.response?.data?.message || `Failed to ${isEditMode ? 'update' : 'create'} News & Event.`;
-      alert(errorMessage);
+      const errorMessage = error.response?.data?.message || `Failed to ${isEditMode ? 'update' : 'create'} event.`;
+      showModal("error", errorMessage);
     } finally {
       setIsSubmitting(false);
     }
@@ -96,7 +122,7 @@ const NewsAndEventForm = () => {
 
   const handleReset = () => {
     setFormData(initialState);
-    // You might need to add a way to clear the file input's visual state
+    setErrors({});
   };
 
   const handleGoBack = () => {
@@ -116,14 +142,14 @@ const NewsAndEventForm = () => {
 
       <form onSubmit={handleSubmit}>
         <div className="bg-white p-6 rounded-lg shadow-md grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
-            <FormField label="Event Title (In English)" value={formData.titleEnglish} onChange={(val) => handleInputChange("titleEnglish", val)} required/>
-            <FormField label="Event Title (In Odia)" value={formData.titleOdia} onChange={(val) => handleInputChange("titleOdia", val)} required/>
-            <FormField label="Event Date" type="date" value={formData.eventDate} onChange={(val) => handleInputChange("eventDate", val)} required/>
+            <FormField label="Event Title (In English)" value={formData.titleEnglish} onChange={(val) => handleInputChange("titleEnglish", val)} required error={errors.titleEnglish}/>
+            <FormField label="Event Title (In Odia)" value={formData.titleOdia} onChange={(val) => handleInputChange("titleOdia", val)} required error={errors.titleOdia}/>
+            <FormField label="Event Date" type="date" value={formData.eventDate} onChange={(val) => handleInputChange("eventDate", val)} required error={errors.eventDate}/>
             <div>
-                <DocumentUploader file={formData.document} onFileChange={handleFileChange} />
+                <DocumentUploader file={formData.document} onFileChange={handleFileChange} error={errors.document} />
                 {isEditMode && !formData.document && existingDocument && (
                     <div className="mt-2 text-sm text-gray-600">
-                        Current file: <a href={`http://localhost:7777/uploads/${existingDocument}`} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">{existingDocument}</a>
+                        Current file: <a href={`${process.env.REACT_APP_API_BASE_URL}${existingDocument}`} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">{existingDocument.split('/').pop()}</a>
                     </div>
                 )}
             </div>
@@ -133,7 +159,7 @@ const NewsAndEventForm = () => {
           onSubmit={handleSubmit}
           onCancel={handleGoBack}
           isSubmitting={isSubmitting}
-          onReset={!isEditMode ? handleReset : null} // Pass null to onReset in edit mode
+          onReset={!isEditMode ? handleReset : null}
         />
       </form>
     </motion.div>
