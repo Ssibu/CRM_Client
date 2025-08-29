@@ -2,15 +2,15 @@ import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
+import { useModal } from "../../context/ModalProvider";
 
 // Import your reusable components
 import Header from "../../Components/Add/Header";
 import FormActions from "../../Components/Add/FormActions";
 import FormField from "../../Components/TextEditor/FormField";
 
-const API_URL = "http://localhost:7777/api/footerlinks";
+const API_URL = `${process.env.REACT_APP_API_URL}/api/footerlinks`;
 
-// Define the initial empty state for the form
 const initialState = {
   englishLinkText: "",
   odiaLinkText: "",
@@ -22,8 +22,10 @@ const FooterlinkForm = () => {
   const { id } = useParams();
   const isEditMode = Boolean(id);
   const navigate = useNavigate();
+  const { showModal } = useModal();
 
   const [formData, setFormData] = useState(initialState);
+  const [errors, setErrors] = useState({}); // State to hold validation errors
   const [isLoading, setIsLoading] = useState(isEditMode);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -34,36 +36,59 @@ const FooterlinkForm = () => {
           const response = await axios.get(`${API_URL}/${id}`);
           setFormData(response.data);
         } catch (error) {
+          showModal("error", "Failed to load link data for editing.");
           console.error("Error fetching link data:", error);
-          alert("Failed to load link data for editing.");
         } finally {
           setIsLoading(false);
         }
       };
       fetchLink();
     }
-  }, [id, isEditMode]);
+  }, [id, isEditMode, showModal]);
 
   const handleInputChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
+    if (errors[field]) {
+      setErrors((prev) => ({ ...prev, [field]: null }));
+    }
+  };
+
+  // Validation function to check all fields
+  const validateForm = () => {
+    const newErrors = {};
+    if (!formData.englishLinkText.trim()) {
+      newErrors.englishLinkText = "English Link Text is required.";
+    }
+    if (!formData.odiaLinkText.trim()) {
+      newErrors.odiaLinkText = "Odia Link Text is required.";
+    }
+    if (!formData.url.trim()) {
+      newErrors.url = "URL is required.";
+    }
+    return newErrors;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsSubmitting(true);
+    const formErrors = validateForm();
+    if (Object.keys(formErrors).length > 0) {
+      setErrors(formErrors);
+      return; // Stop submission
+    }
 
+    setIsSubmitting(true);
     try {
       if (isEditMode) {
         await axios.put(`${API_URL}/${id}`, formData);
-        alert("Footer Link updated successfully!");
+        showModal("success", "Footer Link updated successfully!");
       } else {
         await axios.post(API_URL, formData);
-        alert("Footer Link created successfully!");
+        showModal("success", "Footer Link created successfully!");
       }
       navigate("/admin/workflow/footerlink");
     } catch (error) {
       const action = isEditMode ? "updating" : "creating";
-      alert(`Failed to ${action} Footer Link.`);
+      showModal("error", `Failed to ${action} Footer Link.`);
       console.error(`Error ${action} Footer Link:`, error);
     } finally {
       setIsSubmitting(false);
@@ -72,6 +97,7 @@ const FooterlinkForm = () => {
 
   const handleReset = () => {
     setFormData(initialState);
+    setErrors({});
   };
 
   const handleGoBack = () => {
@@ -91,12 +117,34 @@ const FooterlinkForm = () => {
 
       <form onSubmit={handleSubmit}>
         <div className="bg-white p-6 rounded-lg shadow-md grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
-          <FormField label="Link Text (In English)" value={formData.englishLinkText} onChange={(val) => handleInputChange("englishLinkText", val)} required />
-          <FormField label="Link Text (In Odia)" value={formData.odiaLinkText} onChange={(val) => handleInputChange("odiaLinkText", val)} required />
-          <FormField label="URL" value={formData.url} onChange={(val) => handleInputChange("url", val)} required />
+          <FormField 
+            label="Link Text (In English)" 
+            value={formData.englishLinkText} 
+            onChange={(val) => handleInputChange("englishLinkText", val)} 
+            required 
+            error={errors.englishLinkText}
+          />
+          <FormField 
+            label="Link Text (In Odia)" 
+            value={formData.odiaLinkText} 
+            onChange={(val) => handleInputChange("odiaLinkText", val)} 
+            required 
+            error={errors.odiaLinkText}
+          />
+          <FormField 
+            label="URL" 
+            value={formData.url} 
+            onChange={(val) => handleInputChange("url", val)} 
+            required 
+            error={errors.url}
+          />
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Link Type *</label>
-            <select value={formData.linkType} onChange={(e) => handleInputChange("linkType", e.target.value)} className="w-full border border-gray-300 px-3 py-2.5 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white">
+            <select 
+              value={formData.linkType} 
+              onChange={(e) => handleInputChange("linkType", e.target.value)} 
+              className="w-full border border-gray-300 px-3 py-2.5 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+            >
               <option value="Internal">Internal</option>
               <option value="External">External</option>
             </select>
