@@ -149,7 +149,7 @@ const NewsAndEventForm = () => {
                 <DocumentUploader file={formData.document} onFileChange={handleFileChange} error={errors.document} />
                 {isEditMode && !formData.document && existingDocument && (
                     <div className="mt-2 text-sm text-gray-600">
-                        Current file: <a href={`${process.env.REACT_APP_API_BASE_URL}${existingDocument}`} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">{existingDocument.split('/').pop()}</a>
+                        Current file: <a href={`${process.env.REACT_APP_API_URL}${existingDocument}`} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">{existingDocument.split('/').pop()}</a>
                     </div>
                 )}
             </div>
