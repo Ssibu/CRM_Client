@@ -107,8 +107,9 @@ const SchemeForm = () => {
       }
       navigate("/admin/notifications/scheme");
     } catch (error) {
-      const errorMessage = error.response?.data?.message || `Failed to ${isEditMode ? 'update' : 'create'} scheme.`;
-      showModal("error", errorMessage);
+      const action = isEditMode ? "updating" : "creating";
+      const errorMessage = error.response?.data?.message || `Failed to ${action} Act & Rule.`;
+      showModal("error", errorMessage); 
     } finally {
       setIsSubmitting(false);
     }
