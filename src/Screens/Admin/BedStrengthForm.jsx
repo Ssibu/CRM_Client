@@ -2,14 +2,15 @@ import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
+import { useModal } from "../../context/ModalProvider";
 
-// --- Import your reusable components ---
+// Import your reusable components
 import Header from "../../Components/Add/Header";
 import FormActions from "../../Components/Add/FormActions";
 import FormField from "../../Components/TextEditor/FormField";
 import DocumentUploader from "../../Components/TextEditor/DocumentUploader";
 
-const API_URL = "http://localhost:7777/api/bed-strengths";
+const API_URL = `${process.env.REACT_APP_API_URL}/api/bed-strengths`;
 
 const initialState = {
   en_title: "",
@@ -21,8 +22,10 @@ const BedStrengthForm = () => {
   const { id } = useParams();
   const isEditMode = Boolean(id);
   const navigate = useNavigate();
+  const { showModal } = useModal();
 
   const [formData, setFormData] = useState(initialState);
+  const [errors, setErrors] = useState({}); // State to hold validation errors
   const [existingDocument, setExistingDocument] = useState(''); 
   const [isLoading, setIsLoading] = useState(isEditMode);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -36,35 +39,49 @@ const BedStrengthForm = () => {
           setFormData({ en_title, od_title, document: null });
           setExistingDocument(document);
         } catch (error) {
-          console.error("Error fetching bed strength data:", error);
-          alert("Failed to load data for editing.");
+          showModal("error", "Failed to load record for editing.");
         } finally {
           setIsLoading(false);
         }
       };
       fetchData();
     }
-  }, [id, isEditMode]);
+  }, [id, isEditMode, showModal]);
 
   const handleInputChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
+    if (errors[field]) {
+      setErrors((prev) => ({ ...prev, [field]: null }));
+    }
   };
 
   const handleFileChange = (file) => {
     setFormData((prev) => ({ ...prev, document: file }));
-    if(file) {
-        setExistingDocument('');
+    if (errors.document) {
+      setErrors((prev) => ({ ...prev, document: null }));
     }
+  };
+
+  // Validation function
+  const validateForm = () => {
+    const newErrors = {};
+    if (!formData.en_title.trim()) {
+      newErrors.en_title = "English Title is required.";
+    }
+    if (!formData.od_title.trim()) {
+      newErrors.od_title = "Odia Title is required.";
+    }
+    if (!isEditMode && !formData.document) {
+      newErrors.document = "A document file is required.";
+    }
+    return newErrors;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.en_title.trim() || !formData.od_title.trim()) {
-        alert("Please fill in both title fields.");
-        return;
-    }
-    if (!isEditMode && !formData.document) {
-      alert("Please upload a document file.");
+    const formErrors = validateForm();
+    if (Object.keys(formErrors).length > 0) {
+      setErrors(formErrors);
       return;
     }
 
@@ -75,23 +92,23 @@ const BedStrengthForm = () => {
 
     if (formData.document) {
       submissionData.append("document", formData.document);
-    }
-    if (isEditMode && formData.document) {
+      if (isEditMode) {
         submissionData.append("oldFilePath", existingDocument);
+      }
     }
 
     try {
       if (isEditMode) {
         await axios.put(`${API_URL}/${id}`, submissionData);
-        alert("Record updated successfully!");
+        showModal("success", "Record updated successfully!");
       } else {
         await axios.post(API_URL, submissionData);
-        alert("Record created successfully!");
+        showModal("success", "Record created successfully!");
       }
       navigate("/admin/notifications/bed-strength");
     } catch (error) {
       const errorMessage = error.response?.data?.message || `Failed to ${isEditMode ? 'update' : 'create'} record.`;
-      alert(errorMessage);
+      showModal("error", errorMessage);
     } finally {
       setIsSubmitting(false);
     }
@@ -99,6 +116,7 @@ const BedStrengthForm = () => {
 
   const handleReset = () => {
     setFormData(initialState);
+    setErrors({});
   };
 
   const handleGoBack = () => {
@@ -118,13 +136,29 @@ const BedStrengthForm = () => {
 
       <form onSubmit={handleSubmit}>
         <div className="bg-white p-6 rounded-lg shadow-md grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
-            <FormField label="Title (In English)" value={formData.en_title} onChange={(val) => handleInputChange("en_title", val)} required/>
-            <FormField label="Title (In Odia)" value={formData.od_title} onChange={(val) => handleInputChange("od_title", val)} required/>
+            <FormField 
+              label="Title (In English)" 
+              value={formData.en_title} 
+              onChange={(val) => handleInputChange("en_title", val)} 
+              required
+              error={errors.en_title}
+            />
+            <FormField 
+              label="Title (In Odia)" 
+              value={formData.od_title} 
+              onChange={(val) => handleInputChange("od_title", val)} 
+              required
+              error={errors.od_title}
+            />
             <div>
-                <DocumentUploader file={formData.document} onFileChange={handleFileChange} />
+                <DocumentUploader 
+                  file={formData.document} 
+                  onFileChange={handleFileChange} 
+                  error={errors.document}
+                />
                 {isEditMode && !formData.document && existingDocument && (
                     <div className="mt-2 text-sm text-gray-600">
-                        Current file: <a href={`${process.env.REACT_APP_API_BASE_URL}${existingDocument}`} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">{existingDocument.split('/').pop()}</a>
+                        Current file: <a href={`${process.env.REACT_APP_API_URL}${existingDocument}`} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">{existingDocument.split('/').pop()}</a>
                     </div>
                 )}
             </div>
