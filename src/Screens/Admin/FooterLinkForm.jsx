@@ -88,8 +88,8 @@ const FooterlinkForm = () => {
       navigate("/admin/workflow/footerlink");
     } catch (error) {
       const action = isEditMode ? "updating" : "creating";
-      showModal("error", `Failed to ${action} Footer Link.`);
-      console.error(`Error ${action} Footer Link:`, error);
+      const errorMessage = error.response?.data?.message || `Failed to ${action} Act & Rule.`;
+      showModal("error", errorMessage); 
     } finally {
       setIsSubmitting(false);
     }
