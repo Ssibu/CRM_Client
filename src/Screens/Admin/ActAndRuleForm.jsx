@@ -122,8 +122,8 @@ const ActAndRuleForm = () => {
       navigate("/admin/workflow/act-and-rules");
     } catch (error) {
       const action = isEditMode ? "updating" : "creating";
-      showModal("error", `Failed to ${action} Act & Rule.`);
-      console.error(`Error ${action} Act & Rule:`, error);
+      const errorMessage = error.response?.data?.message || `Failed to ${action} Act & Rule.`;
+      showModal("error", errorMessage); 
     } finally {
       setIsSubmitting(false);
     }
