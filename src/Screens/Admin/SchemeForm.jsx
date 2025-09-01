@@ -34,7 +34,7 @@ const SchemeForm = () => {
     if (isEditMode) {
       const fetchData = async () => {
         try {
-          const response = await axios.get(`${API_URL}/${id}`);
+          const response = await axios.get(`${API_URL}/${id}`,{},{withCredentials:true});
           const { en_title, od_title, document } = response.data;
           setFormData({ en_title, od_title, document: null });
           setExistingDocument(document);
@@ -99,10 +99,10 @@ const SchemeForm = () => {
 
     try {
       if (isEditMode) {
-        await axios.put(`${API_URL}/${id}`, submissionData);
+        await axios.put(`${API_URL}/${id}`, submissionData,{withCredentials:true});
         showModal("success", "Scheme updated successfully!");
       } else {
-        await axios.post(API_URL, submissionData);
+        await axios.post(API_URL, submissionData,{withCredentials:true});
         showModal("success", "Scheme created successfully!");
       }
       navigate("/admin/notifications/scheme");
