@@ -26,6 +26,7 @@ const BedStrengthForm = () => {
   const [formData, setFormData] = useState(initialState);
   const [errors, setErrors] = useState({}); // State to hold validation errors
   const [existingDocument, setExistingDocument] = useState(''); 
+    const [isFileMarkedForDeletion, setIsFileMarkedForDeletion] = useState(false);
   const [isLoading, setIsLoading] = useState(isEditMode);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -61,6 +62,7 @@ const BedStrengthForm = () => {
     } else {
       setFormData(prev => ({ ...prev, document: file }));
       if (errors.document) setErrors(prev => ({ ...prev, document: null }));
+      if (isFileMarkedForDeletion) setIsFileMarkedForDeletion(false);
     }
   };
 
