@@ -124,6 +124,7 @@ const PolicyForm = () => {
   const handleReset = () => {
     setFormData(initialState);
     setErrors({});
+    setIsFileMarkedForDeletion(false); // Also reset this flag
   };
 
   return (
