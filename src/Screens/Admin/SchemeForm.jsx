@@ -175,12 +175,12 @@ const SchemeForm = () => {
                   
                   // Add props for handling existing files
                   existingFileName={existingDocument}
-                  existingFileUrl={`${import.meta.env.VITE_API_BASE_URL}/uploads/forms/${existingDocument}`}
+                  existingFileUrl={`${import.meta.env.VITE_API_BASE_URL}/uploads/schemes/${existingDocument}`}
                   onRemove={isEditMode ? handleRemoveFile : null}
                 />
                 {isEditMode && !formData.document && existingDocument && (
                     <div className="mt-2 text-sm text-gray-600">
-                        Current file: <a href={`${import.meta.env.VITE_API_BASE_URL}${existingDocument}`} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">{existingDocument.split('/').pop()}</a>
+                        Current file: <a href={`${import.meta.env.VITE_API_BASE_URL}/uploads/schemes/${existingDocument}`} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">{existingDocument.split('/').pop()}</a>
                     </div>
                 )}
             </div>
