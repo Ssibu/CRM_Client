@@ -81,7 +81,7 @@ const BedStrengthForm = () => {
     return newErrors;
   };
 
-  const handleSubmit = async (e) => {
+   const handleSubmit = async (e) => {
     e.preventDefault();
     const formErrors = validateForm();
     if (Object.keys(formErrors).length > 0) {
@@ -94,26 +94,33 @@ const BedStrengthForm = () => {
     submissionData.append("en_title", formData.en_title);
     submissionData.append("od_title", formData.od_title);
 
+    // --- THIS IS THE CORRECTED LOGIC ---
+
+    // 1. Append the new file if it exists.
     if (formData.document) {
       submissionData.append("document", formData.document);
-      if (isEditMode) {
-        submissionData.append("oldFilePath", existingDocument);
-      }
     }
-    submissionData.append("removeExistingDocument", isFileMarkedForDeletion);
+    
+    // 2. In edit mode, always send the flag indicating if the user
+    //    clicked the "Remove" button.
+    if (isEditMode) {
+        submissionData.append("removeExistingDocument", isFileMarkedForDeletion);
+    }
+    // The `oldFilePath` is no longer needed because the new backend logic
+    // gets the old filename directly from the database record.
 
     try {
+      const config = { headers: { 'Content-Type': 'multipart/form-data' }, withCredentials: true };
       if (isEditMode) {
-        await axios.put(`${API_URL}/${id}`, submissionData,{withCredentials:true});
+        await axios.put(`${API_URL}/${id}`, submissionData, config);
         showModal("success", "Record updated successfully!");
       } else {
-        await axios.post(API_URL, submissionData,{withCredentials:true});
+        await axios.post(API_URL, submissionData, config);
         showModal("success", "Record created successfully!");
       }
       navigate("/admin/notifications/bed-strength");
     } catch (error) {
-      const action = isEditMode ? "updating" : "creating";
-      const errorMessage = error.response?.data?.message || `Failed to ${action} Act & Rule.`;
+      const errorMessage = error.response?.data?.message || `Failed to ${isEditMode ? 'update' : 'create'} record.`;
       showModal("error", errorMessage); 
     } finally {
       setIsSubmitting(false);
@@ -128,17 +135,10 @@ const BedStrengthForm = () => {
   const handleGoBack = () => {
     navigate("/admin/notifications/bed-strength");
   };
-  const handleRemoveFile = async () => {
-    if (window.confirm("Are you sure you want to remove the existing document?")) {
-      try {
-        // You will need to create this endpoint on your backend
-        await axios.patch(`${API_URL}/${id}/remove-document`, {}, { withCredentials: true });
-        setExistingDocument(''); // Update UI immediately
-        showModal("success", "Document removed successfully.");
-      } catch (error) {
-        showModal("error", "Failed to remove document.");
-        console.error("Error removing document:", error);
-      }
+   const handleRemoveFile = () => {
+    if (window.confirm("The current document will be removed when you click 'Submit'. Are you sure?")) {
+      setExistingDocument(''); // <-- CORRECTED
+      setIsFileMarkedForDeletion(true);
     }
   };
 

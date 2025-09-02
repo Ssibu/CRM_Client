@@ -26,6 +26,7 @@ const FormForm = () => {
   const [formData, setFormData] = useState(initialState);
   const [errors, setErrors] = useState({}); // State to hold validation errors
   const [existingDocument, setExistingDocument] = useState(''); 
+  const [isFileMarkedForDeletion, setIsFileMarkedForDeletion] = useState(false);
   const [isLoading, setIsLoading] = useState(isEditMode);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -63,6 +64,7 @@ const FormForm = () => {
       // If the file is valid, set it in the form's data state and clear any old error
       setFormData(prev => ({ ...prev, document: file }));
       if (errors.document) setErrors(prev => ({ ...prev, document: null }));
+      if (isFileMarkedForDeletion) setIsFileMarkedForDeletion(false);
     }
   };
   
@@ -97,23 +99,24 @@ const FormForm = () => {
 
     if (formData.document) {
       submissionData.append("document", formData.document);
-      if (isEditMode) {
-        submissionData.append("oldFilePath", existingDocument);
-      }
+    }
+    
+    // --- THIS IS THE KEY CHANGE ---
+    if (isEditMode) {
+      submissionData.append("removeExistingDocument", isFileMarkedForDeletion);
     }
 
     try {
       if (isEditMode) {
-        await axios.put(`${API_URL}/${id}`, submissionData,{withCredentials:true});
+        await axios.put(`${API_URL}/${id}`, submissionData, { withCredentials: true });
         showModal("success", "Form updated successfully!");
       } else {
-        await axios.post(API_URL, submissionData,{withCredentials:true});
+        await axios.post(API_URL, submissionData, { withCredentials: true });
         showModal("success", "Form created successfully!");
       }
       navigate("/admin/notifications/forms");
     } catch (error) {
-      const action = isEditMode ? "updating" : "creating";
-      const errorMessage = error.response?.data?.message || `Failed to ${action} Act & Rule.`;
+      const errorMessage = error.response?.data?.message || `Failed to ${isEditMode ? 'update' : 'create'} form.`;
       showModal("error", errorMessage); 
     } finally {
       setIsSubmitting(false);
@@ -129,17 +132,10 @@ const FormForm = () => {
     navigate("/admin/notifications/forms");
   };
 
-  const handleRemoveFile = async () => {
-    if (window.confirm("Are you sure you want to remove the existing document?")) {
-      try {
-        // You will need to create this endpoint on your backend
-        await axios.patch(`${API_URL}/${id}/remove-document`, {}, { withCredentials: true });
-        setExistingDocument(''); // Update UI immediately
-        showModal("success", "Document removed successfully.");
-      } catch (error) {
-        showModal("error", "Failed to remove document.");
-        console.error("Error removing document:", error);
-      }
+ const handleRemoveFile = () => {
+    if (window.confirm("The current document will be removed when you click 'Submit'. Are you sure?")) {
+      setExistingDocument(''); // This should be existingDocumentName
+      setIsFileMarkedForDeletion(true);
     }
   };
   if (isLoading) {
