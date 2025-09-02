@@ -126,6 +126,7 @@ const SchemeForm = () => {
   const handleReset = () => {
     setFormData(initialState);
     setErrors({});
+    setIsFileMarkedForDeletion(false); // Also reset this flag
   };
 
   const handleGoBack = () => {

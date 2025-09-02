@@ -28,6 +28,7 @@ const NewsAndEventForm = () => {
   const [formData, setFormData] = useState(initialState);
   const [errors, setErrors] = useState({});
   const [existingDocumentName, setExistingDocumentName] = useState('');
+  const [isFileMarkedForDeletion, setIsFileMarkedForDeletion] = useState(false);
   const [isLoading, setIsLoading] = useState(isEditMode);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -62,6 +63,7 @@ const NewsAndEventForm = () => {
     } else {
       setFormData(prev => ({ ...prev, document: file }));
       if (errors.document) setErrors(prev => ({ ...prev, document: null }));
+      setIsFileMarkedForDeletion(false);
     }
   };
 
@@ -92,10 +94,10 @@ const NewsAndEventForm = () => {
       submissionData.append("document", formData.document);
     }
     
-    // This is now handled by the backend controller logic, so not needed.
-    // if (isEditMode && formData.document) {
-    //   submissionData.append("oldFilePath", existingDocumentName);
-    // }
+    // --- THIS IS THE KEY CHANGE ---
+    if (isEditMode) {
+      submissionData.append("removeExistingDocument", isFileMarkedForDeletion);
+    }
 
     try {
       const config = { headers: { 'Content-Type': 'multipart/form-data' }, withCredentials: true };
@@ -114,10 +116,17 @@ const NewsAndEventForm = () => {
       setIsSubmitting(false);
     }
   };
+  const handleRemoveFile = () => {
+    if (window.confirm("The current document will be removed when you click 'Submit'. Are you sure?")) {
+      setExistingDocumentName('');
+      setIsFileMarkedForDeletion(true);
+    }
+  };
 
   const handleReset = () => {
     setFormData(initialState);
     setErrors({});
+    setIsFileMarkedForDeletion(false); // Also reset this flag
   };
 
   if(isLoading) return <div className="flex justify-center items-center h-96" >Loading...</div>
@@ -144,6 +153,7 @@ const NewsAndEventForm = () => {
               maxSizeMB={1}
               existingFileName={existingDocumentName}
               existingFileUrl={`${import.meta.env.VITE_API_BASE_URL}/uploads/events/${existingDocumentName}`}
+              onRemove={isEditMode ? handleRemoveFile : null}
             />
         </div>
         <FormActions
