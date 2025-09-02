@@ -27,6 +27,7 @@ const PolicyForm = () => {
   const [formData, setFormData] = useState(initialState);
   const [errors, setErrors] = useState({});
   const [existingDocumentName, setExistingDocumentName] = useState('');
+  const [isFileMarkedForDeletion, setIsFileMarkedForDeletion] = useState(false);
   const [isLoading, setIsLoading] = useState(isEditMode);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -60,19 +61,14 @@ const PolicyForm = () => {
     } else {
       setFormData(prev => ({ ...prev, document: file }));
       if (errors.document) setErrors(prev => ({ ...prev, document: null }));
+      setIsFileMarkedForDeletion(false);
     }
   };
 
-  const handleRemoveFile = async () => {
-    if (window.confirm("Are you sure you want to remove the existing document?")) {
-      try {
-        // You will need to create this endpoint on your backend
-        
-        setExistingDocumentName('');
-        showModal("success", "Document removed successfully.");
-      } catch (error) {
-        showModal("error", "Failed to remove document.");
-      }
+  const handleRemoveFile = () => {
+    if (window.confirm("The current document will be removed when you click 'Submit'. Are you sure?")) {
+      setExistingDocumentName(''); // Update UI to hide the existing file info
+      setIsFileMarkedForDeletion(true); // Mark the file for deletion on submit
     }
   };
 
@@ -85,7 +81,7 @@ const PolicyForm = () => {
     return newErrors;
   };
 
-  const handleSubmit = async (e) => {
+ const handleSubmit = async (e) => {
     e.preventDefault();
     const formErrors = validateForm();
     if (Object.keys(formErrors).length > 0) {
@@ -102,6 +98,12 @@ const PolicyForm = () => {
       submissionData.append("document", formData.document);
     }
     
+    // --- THIS IS THE KEY CHANGE ---
+    // In edit mode, send the flag indicating the user's intent.
+    if (isEditMode) {
+      submissionData.append("removeExistingDocument", isFileMarkedForDeletion);
+    }
+
     try {
       const config = { headers: { 'Content-Type': 'multipart/form-data' }, withCredentials: true };
       if (isEditMode) {
@@ -119,7 +121,6 @@ const PolicyForm = () => {
       setIsSubmitting(false);
     }
   };
-
   const handleReset = () => {
     setFormData(initialState);
     setErrors({});
