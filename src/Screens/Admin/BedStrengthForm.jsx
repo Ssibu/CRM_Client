@@ -100,6 +100,7 @@ const BedStrengthForm = () => {
         submissionData.append("oldFilePath", existingDocument);
       }
     }
+    submissionData.append("removeExistingDocument", isFileMarkedForDeletion);
 
     try {
       if (isEditMode) {
