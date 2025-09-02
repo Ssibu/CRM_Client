@@ -77,7 +77,7 @@ const PolicyForm = () => {
     if (!formData.en_title.trim()) newErrors.en_title = "English Title is required.";
     if (!formData.od_title.trim()) newErrors.od_title = "Odia Title is required.";
     if (!isEditMode && !formData.document) newErrors.document = "A document file is required.";
-    if (isEditMode && !existingDocumentName && !formData.document) newErrors.document = "A document file is required since the previous one was removed.";
+    
     return newErrors;
   };
 
