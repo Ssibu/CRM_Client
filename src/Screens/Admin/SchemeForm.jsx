@@ -96,7 +96,7 @@ const SchemeForm = () => {
     const submissionData = new FormData();
     submissionData.append("en_title", formData.en_title);
     submissionData.append("od_title", formData.od_title);
-
+ 
     if (formData.document) {
       submissionData.append("document", formData.document);
     }
