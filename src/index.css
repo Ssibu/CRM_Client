@@ -1,6 +1,36 @@
+/* src/index.css */
+
 @import "tailwindcss";
 
-
-button{
-cursor: pointer;
+button {
+  cursor: pointer;
 }
+
+/* === ACCESSIBILITY STYLES - ADD THIS ENTIRE BLOCK === */
+
+/* Big Cursor */
+/* IMPORTANT: You must create a 'cursors' folder inside your '/public' directory
+   and place a cursor image (e.g., big-cursor.png) inside it. */
+html.big-cursor, 
+html.big-cursor body, 
+html.big-cursor button, 
+html.big-cursor a {
+  cursor: url('/cursors/big-cursor.png'), auto;
+}
+
+/* Night Mode (Dark Theme) */
+html.night-mode {
+  /* This filter combination is a great way to create a dark theme
+     without writing dozens of color override rules. */
+  filter: invert(1) hue-rotate(180deg);
+  background-color: #121212; /* This prevents a white "flash" on page load */
+}
+
+/* We must re-invert images, videos, and maps so they look normal in night mode. */
+html.night-mode img,
+html.night-mode video,
+html.night-mode iframe {
+  filter: invert(1) hue-rotate(180deg);
+}
+
+/* ======================================================= */

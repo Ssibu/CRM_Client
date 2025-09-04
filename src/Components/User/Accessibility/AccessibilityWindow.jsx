@@ -1,95 +1,110 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import {
-  X,
-  Type,
-  Contrast,
-  Moon,
-  Sun,
-  Volume2,
-  Keyboard,
-  Eye,
-  Undo2,
-  Maximize2,
-  Minimize2,
+  X, Type, Sun, Volume2, Search, Link as LinkIcon,
+  Undo2, Maximize2, Minimize2, Settings, Wrench, MousePointerClick, Languages
 } from "lucide-react";
+import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import AccessibilitySlider from "./AccessibilitySlider";
-
+import AccessibilityContext from "@/context/AccessibilityContext"
 export default function AccessibilityWindow({ isOpen, onClose }) {
-  const [activeTab, setActiveTab] = useState("text");
-  const [fontSize, setFontSize] = useState(16);
-  const [brightness, setBrightness] = useState(100);
+   const {
+    fontSize, setFontSize,
+    letterSpacing, setLetterSpacing,
+    lineHeight, setLineHeight,
+    isBigCursor, setIsBigCursor,
+    isNightMode, setIsNightMode,
+    resetAllSettings,
+  } = useContext(AccessibilityContext);
+   const [activeTab, setActiveTab] = useState("Adjustments");
+  
   const [openSlider, setOpenSlider] = useState(null);
   const [isMaximized, setIsMaximized] = useState(false);
+  const [isSpeakerEnabled, setIsSpeakerEnabled] = useState(false);
 
-  const textOptions = [
-    { id: "font", label: "Font Size", icon: <Type />, type: "slider" },
-    { id: "spacing", label: "Text Spacing", icon: <Type /> },
-    { id: "readable", label: "Readable Font", icon: <Type /> },
+  const adjustmentOptions = [
+    { id: "fontSize", label: "Font Size", icon: <Type />, type: "slider" },
+    { id: "textSpacing", label: "Text Spacing", icon: <Type />, type: "slider" },
+    { id: "lineHeight", label: "Line Height", icon: <Type />, type: "slider" },
+    { id: "nightMode", label: "Night Mode", icon: <Sun />, type: "toggle" },
   ];
+  
+  const toolOptions = [
+    { id: "bigCursor", label: "Big Cursor", icon: <MousePointerClick />, type: "toggle" },
+    { id: "speaker", label: "Speaker", icon: <Volume2 />, type: "widget" },
+    { id: "translate", label: "Translate (OD)", icon: <Languages />, type: "placeholder" },
+    { id: "search", label: "Search", icon: <Search />, type: "link", path: "/search" },
+    { id: "sitemap", label: "Sitemap", icon: <LinkIcon />, type: "link", path: "/sitemap" },
+  ];
+  const handleButtonClick = (opt) => {
+    // Handle Toggles
+    if (opt.type === 'toggle') {
+      if (opt.id === 'nightMode') setIsNightMode(!isNightMode);
+      if (opt.id === 'bigCursor') setIsBigCursor(!isBigCursor);
+    }
+    // Handle Sliders
+    if (opt.type === 'slider') {
+      setOpenSlider(openSlider === opt.id ? null : opt.id);
+    }
+    // Handle Speaker Widget
+    if (opt.id === 'speaker') {
+      setIsSpeakerEnabled(!isSpeakerEnabled);
+    }
+    // The 'translate' placeholder button will do nothing by default
+  };
 
-  const visionOptions = [
-    { id: "contrast", label: "High Contrast", icon: <Contrast /> },
-    { id: "dark", label: "Dark Mode", icon: <Moon /> },
-    { id: "invert", label: "Invert Colors", icon: <Sun /> },
-    {
-      id: "brightness",
-      label: "Brightness",
-      icon: <Contrast />,
-      type: "slider",
-    },
-  ];
+  const handleSpeak = () => {
+    const selectedText = window.getSelection().toString().trim();
+    if (selectedText) {
+      const utterance = new SpeechSynthesisUtterance(selectedText);
+      window.speechSynthesis.speak(utterance);
+    } else {
+      alert("Please select some text on the page to hear it read aloud.");
+    }
+  };
 
-  const assistiveOptions = [
-    { id: "screenreader", label: "Screen Reader", icon: <Eye /> },
-    { id: "focus", label: "Focus Highlight", icon: <Eye /> },
-    { id: "voice", label: "Voice Control", icon: <Volume2 /> },
-    { id: "keyboard", label: "Keyboard Nav", icon: <Keyboard /> },
-  ];
 
   const renderOptions = (options) =>
-    options.map((opt) => (
-      <motion.div key={opt.id} className="flex flex-col">
-        <motion.button
-          whileHover={{ y: -2 }}
-          whileTap={{ scale: 0.98 }}
-          onClick={() => setOpenSlider(openSlider === opt.id ? null : opt.id)}
-          className="flex flex-col items-center justify-center p-4 rounded-lg bg-gray-50 hover:bg-blue-50 
-                    border border-gray-200 hover:border-blue-300 transition-all duration-200"
-        >
-          <div className="w-10 h-10 flex items-center justify-center rounded-full text-blue-600 bg-blue-100 mb-2">
-            {opt.icon}
-          </div>
-          <span className="text-sm font-medium text-gray-700">{opt.label}</span>
-        </motion.button>
+    options.map((opt) => {
+      if (opt.type === 'link') {
+        return (
+          <Link to={opt.path} key={opt.id} className="block">
+            <motion.div /* ... */ > {/* ... a styled div for the link ... */} </motion.div>
+          </Link>
+        );
+      }
+      return (
+        <motion.div key={opt.id} className="flex flex-col">
+          <motion.button
+            whileHover={{ y: -2 }} whileTap={{ scale: 0.98 }}
+            onClick={() => handleButtonClick(opt)}
+            className={`flex flex-col items-center justify-center p-4 rounded-lg bg-gray-50 border border-gray-200 transition-all duration-200 h-full ${
+                opt.type === 'placeholder' ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-50 hover:border-blue-300'
+            }`}
+            disabled={opt.type === 'placeholder'}
+          >
+            <div className="w-10 h-10 flex items-center justify-center rounded-full text-blue-600 bg-blue-100 mb-2">{opt.icon}</div>
+            <span className="text-sm font-medium text-gray-700 text-center">{opt.label}</span>
+          </motion.button>
 
-        {/* Slider Section */}
-        {opt.type === "slider" && openSlider === opt.id && (
-          <div className="p-3 border-t bg-white">
-            {opt.id === "font" && (
-              <AccessibilitySlider
-                value={fontSize}
-                setValue={setFontSize}
-                min={12}
-                max={32}
-                step={1}
-                unit="px"
-              />
-            )}
-            {opt.id === "brightness" && (
-              <AccessibilitySlider
-                value={brightness}
-                setValue={setBrightness}
-                min={50}
-                max={150}
-                step={5}
-                unit="%"
-              />
-            )}
-          </div>
-        )}
-      </motion.div>
-    ));
+          {opt.type === "slider" && openSlider === opt.id && (
+            <div className="p-3 border-t bg-white">
+              {opt.id === "fontSize" && <AccessibilitySlider value={fontSize} setValue={setFontSize} min={12} max={24} step={1} unit="px" />}
+              {opt.id === "textSpacing" && <AccessibilitySlider value={letterSpacing} setValue={setLetterSpacing} min={0} max={5} step={0.5} unit="px" />}
+              {opt.id === "lineHeight" && <AccessibilitySlider value={lineHeight} setValue={setLineHeight} min={1.2} max={2.5} step={0.1} unit="" />}
+            </div>
+          )}
+
+          {opt.id === 'speaker' && isSpeakerEnabled && (
+            <div className="p-3 border-t bg-white">
+              <button onClick={handleSpeak} className="w-full px-3 py-2 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700">
+                Speak Selected Text
+              </button>
+            </div>
+          )}
+        </motion.div>
+      )
+    });
 
   return (
     <AnimatePresence>
@@ -160,64 +175,45 @@ export default function AccessibilityWindow({ isOpen, onClose }) {
 
             {/* Tabs */}
             <div className="flex border-b border-gray-200 px-4 bg-gray-50">
-              {["text", "vision", "assistive"].map((tab) => (
-                <button
-                  key={tab}
-                  className={`px-4 py-3 text-sm font-medium transition-colors ${
-                    activeTab === tab
-                      ? "text-blue-600 border-b-2 border-blue-600"
-                      : "text-gray-500 hover:text-gray-700"
-                  }`}
-                  onClick={() => setActiveTab(tab)}
-                >
-                  {tab.charAt(0).toUpperCase() + tab.slice(1)}
-                </button>
-              ))}
-            </div>
+  {["Adjustments", "Tools"].map((tab) => (
+    <button
+      key={tab}
+      className={`px-4 py-3 text-sm font-medium transition-colors ${activeTab === tab ? 'text-blue-600 border-b-2 border-blue-600' : 'text-gray-500 hover:text-gray-700'}`}
+      onClick={() => setActiveTab(tab)}
+    >
+      <span className="flex items-center gap-2">
+        {tab === 'Adjustments' ? <Settings size={16}/> : <Wrench size={16} />}
+        {tab}
+      </span>
+    </button>
+  ))}
+</div>
 
             {/* Content */}
             <div className="flex-1 overflow-y-auto p-5">
-              {activeTab === "text" && (
-                <>
-                  <h3 className="font-medium text-gray-700 mb-3">
-                    Text Adjustments
-                  </h3>
-                  <div className="grid grid-cols-2 gap-3">
-                    {renderOptions(textOptions)}
-                  </div>
-                </>
-              )}
-              {activeTab === "vision" && (
-                <>
-                  <h3 className="font-medium text-gray-700 mb-3">
-                    Visual Adjustments
-                  </h3>
-                  <div className="grid grid-cols-2 gap-3">
-                    {renderOptions(visionOptions)}
-                  </div>
-                </>
-              )}
-              {activeTab === "assistive" && (
-                <>
-                  <h3 className="font-medium text-gray-700 mb-3">
-                    Assistive Tools
-                  </h3>
-                  <div className="grid grid-cols-2 gap-3">
-                    {renderOptions(assistiveOptions)}
-                  </div>
-                </>
-              )}
-            </div>
+  {activeTab === "Adjustments" && (
+    <>
+      <h3 className="font-medium text-gray-700 mb-3">Style Adjustments</h3>
+      <div className="grid grid-cols-2 md:grid-cols-2 gap-3">{renderOptions(adjustmentOptions)}</div>
+    </>
+  )}
+  {activeTab === "Tools" && (
+    <>
+      <h3 className="font-medium text-gray-700 mb-3">Tools & Utilities</h3>
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-3">{renderOptions(toolOptions)}</div>
+    </>
+  )}
+</div>
 
             {/* Footer */}
             <div className="px-5 py-4 bg-gray-50 border-t border-gray-200 flex justify-between">
-              <button className="flex items-center text-sm text-gray-600 hover:text-gray-800 transition-colors">
-                <Undo2 className="mr-2" size={16} /> Reset All
-              </button>
-              <button className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 transition-colors">
-                Apply Settings
-              </button>
-            </div>
+  <button 
+    onClick={resetAllSettings}
+    className="flex items-center text-sm text-gray-600 hover:text-gray-800 transition-colors"
+  >
+    <Undo2 className="mr-2" size={16} /> Reset All
+  </button>
+</div>
           </motion.section>
         </>
       )}
