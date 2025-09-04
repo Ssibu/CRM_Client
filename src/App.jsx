@@ -7,6 +7,7 @@ import AdminLayout from './Routes/middleware/AdminLayout';
 import Layout from './Screens/Layout/Layout';
 import "highlight.js/styles/github.css"; 
 import { AccessibilityProvider } from './context/AccessibilityContext'; 
+import { LanguageProvider } from './context/LanguageContext'; 
 
 
 const App = () => {
