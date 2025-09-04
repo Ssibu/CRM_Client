@@ -106,12 +106,8 @@ const authRoutes = [
 ]
 
 const nonAuthRoutes = [
-
-  {path:"*", component: <PageNotFound/>},
-
-    // user routes here-------------------------------------------
-
- { path: "/", component: <Home /> },
+  { path: "/:lang/:theme", component: <Home /> },
+ { path: "/:lang/:theme/*", component: <PageNotFound /> },
 ];
 
 const adminRoutes = [
