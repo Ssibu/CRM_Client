@@ -6,19 +6,29 @@ import AuthLayout from './Routes/middleware/AuthLayout';
 import AdminLayout from './Routes/middleware/AdminLayout';
 import Layout from './Screens/Layout/Layout';
 import "highlight.js/styles/github.css"; 
+import { AccessibilityProvider } from './context/AccessibilityContext'; 
 
 
 const App = () => {
   return (
     <React.Fragment>
         <Routes>
-          {nonAuthRoutes.map((route, idx) => (
-            <Route
-              path={route.path}
-              element={<NonAuthLayout>{route.component}</NonAuthLayout>}
-              key={idx}
-            />
-          ))}
+          <Route 
+            path="/*"
+            element={
+              <AccessibilityProvider>
+                <Routes>
+                  {nonAuthRoutes.map((route, idx) => (
+                    <Route
+                      key={idx}
+                      path={route.path}
+                      element={<NonAuthLayout>{route.component}</NonAuthLayout>}
+                    />
+                  ))}
+                </Routes>
+              </AccessibilityProvider>
+            } 
+          />
 
            {authRoutes.map((route, idx) => (
             <Route
