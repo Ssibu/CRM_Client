@@ -15,19 +15,13 @@ const App = () => {
     <React.Fragment>
         <Routes>
           <Route 
-            path="/*"
+            path="/:lang/:theme/*"
             element={
-              <AccessibilityProvider>
-                <Routes>
-                  {nonAuthRoutes.map((route, idx) => (
-                    <Route
-                      key={idx}
-                      path={route.path}
-                      element={<NonAuthLayout>{route.component}</NonAuthLayout>}
-                    />
-                  ))}
-                </Routes>
-              </AccessibilityProvider>
+              <LanguageProvider>
+                <AccessibilityProvider>
+                  <NonAuthLayout />
+                </AccessibilityProvider>
+              </LanguageProvider>
             } 
           />
 
