@@ -1,6 +1,6 @@
 import React from 'react'
-import {  Route, Routes } from "react-router-dom";
-import { nonAuthRoutes, authRoutes, adminRoutes } from './Routes/AllRoutes';
+import {  Route, Routes,Navigate } from "react-router-dom";
+import {  authRoutes, adminRoutes } from './Routes/AllRoutes';
 import NonAuthLayout from './Routes/middleware/NonAuthLayout';
 import AuthLayout from './Routes/middleware/AuthLayout';
 import AdminLayout from './Routes/middleware/AdminLayout';
@@ -13,9 +13,14 @@ import { LanguageProvider } from './context/LanguageContext';
 const App = () => {
   return (
     <React.Fragment>
+      
         <Routes>
           <Route 
-            path="/:lang/:theme/*"
+    path="/" 
+    element={<Navigate to="/:lang/:theme" replace />} 
+/>
+          <Route 
+            path="/:lang?/:theme?/*"
             element={
               <LanguageProvider>
                 <AccessibilityProvider>

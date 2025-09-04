@@ -106,8 +106,18 @@ const authRoutes = [
 ]
 
 const nonAuthRoutes = [
-  { path: "/:lang/:theme", component: <Home /> },
- { path: "/:lang/:theme/*", component: <PageNotFound /> },
+  // This 'index: true' route is the correct way to specify the
+  // component for the parent path ('/' relative to /:lang/:theme).
+  { index: true, element: <Home /> },
+
+  // --- ADD ALL YOUR OTHER PUBLIC PAGES HERE ---
+  // Their paths will be relative to /:lang/:theme
+  // For example:
+  // { path: "contact-us", element: <ContactPage /> },
+  // { path: "gallery/photos", element: <PhotoGalleryPage /> },
+  
+  // This catch-all MUST be last. It handles pages not found within this group.
+  { path: "*", element: <PageNotFound /> },
 ];
 
 const adminRoutes = [

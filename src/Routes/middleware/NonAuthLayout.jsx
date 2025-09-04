@@ -13,7 +13,7 @@ import Chatbot from "@/Components/User/Layout/Chatbot";
 import Accessibility from "@/Components/User/Layout/Accessibility";
 
 const NonAuthLayout = () => {
-  const { user, loading } = useContext(AuthContext);
+  const { user, loading } = useContext(AuthContext); // Re-added
 
   const { lang, theme } = useParams();
   const navigate = useNavigate();
@@ -22,18 +22,28 @@ const NonAuthLayout = () => {
   const { setIsNightMode } = useContext(AccessibilityContext);
 
   useEffect(() => {
-    if (lang !== 'en' && lang !== 'od') {
+    // Phase 1: URL Validation
+    if (!lang || (lang !== 'en' && lang !== 'od')) {
       navigate('/en/light/', { replace: true });
       return;
     }
-    if (theme !== 'light' && theme !== 'dark') {
+    if (!theme || (theme !== 'light' && theme !== 'dark')) {
       navigate(`/${lang}/light/`, { replace: true });
       return;
     }
+
+    // Phase 2: Authentication Check
+    // if (!loading && user) {
+    //   navigate("/admin/dashboard", { replace: true });
+    //   return;
+    // }
+    
+    // Phase 3: State Synchronization
     setLanguage(lang);
     setIsNightMode(theme === 'dark');
-  }, [lang, theme, setLanguage, setIsNightMode, navigate]);
+  }, [lang, theme, user, loading, setLanguage, setIsNightMode, navigate]);
 
+  // Re-added loading spinner
   if (loading) {
     return (
       <div className="fixed inset-0 flex items-center justify-center bg-white z-50">
@@ -51,8 +61,9 @@ const NonAuthLayout = () => {
           {nonAuthRoutes.map((route, idx) => (
             <Route
               key={idx}
-              path={route.path.replace("/:lang/:theme", "")}
-              element={route.component}
+              index={route.index}
+              path={route.path}
+              element={route.element}
             />
           ))}
         </Routes>
