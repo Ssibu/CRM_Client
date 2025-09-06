@@ -58,4 +58,4 @@ export const AccessibilityProvider = ({ children }) => {
   );
 };
 
-export default AccessibilityContext;
+export default AccessibilityContext; 
