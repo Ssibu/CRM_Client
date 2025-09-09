@@ -232,6 +232,12 @@ export const menuItems = [
           icon: <RiArrowDropRightFill size={30} />,
           permission:"P"
         },
+        {
+          label:"User Logs",
+          path:"/admin/log-report",
+          icon:<RiArrowDropRightFill size={30} />,
+          permission:"LR"
+        }
       ],
     },
   ];

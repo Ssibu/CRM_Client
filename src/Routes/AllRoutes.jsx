@@ -65,6 +65,7 @@ import AddImportantLink from "../Screens/Admin/ImageSetup/AddImportantLink";
 import GenerateLinkPage from "../Screens/Admin/GenerateLink/GenerateLink";
 import GenerateLinkForm from "../Screens/Admin/GenerateLink/GenerateLinkForm";
 import ChangePasswordPage from "../Screens/Admin/ChangePassword";
+import LogListPage from "@/Screens/Admin/LogReportPage";
 
 // user routes here
 import Home from "@/Screens/User/Home";
@@ -368,6 +369,7 @@ const adminRoutes = [
   { path: "/admin/user-management/users", component: <UserList /> },
   { path: "/admin/user-management/users/add", component: <UserForm /> },
   { path: "/admin/user-management/users/edit/:id", component: <UserForm /> },
+  {path: "/admin/log-report", component: <LogListPage />},
 ];
 
 export { adminRoutes, nonAuthRoutes, authRoutes };
