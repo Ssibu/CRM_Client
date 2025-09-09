@@ -18,33 +18,10 @@ const getLinkPath = (level, slug) => {
 const Navbar = () => {
   const { translate } = useGlobalTranslation();
     const { navigation: menuItems, loading: isLoading, error } = useNavigation();
-
-  // const [menuItems, setMenuItems] = useState([]);
-  // const [isLoading, setIsLoading] = useState(true);
-  // const [error, setError] = useState(null);
-
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mobileDropdown, setMobileDropdown] = useState(null);
   const [mobileSubmenu, setMobileSubmenu] = useState(null);
-
-  // useEffect(() => {
-  //   const fetchNavItems = async () => {
-  //     try {
-  //       const response = await axios.get(
-  //         `${import.meta.env.VITE_API_BASE_URL}/menus`
-  //       );
-  //       setMenuItems(response.data);
-  //     } catch (err) {
-  //       setError(err.message);
-  //       console.error("Failed to fetch navigation items:", err);
-  //     } finally {
-  //       setIsLoading(false);
-  //     }
-  //   };
-  //   fetchNavItems();
-  // }, []);
-
-  if (isLoading) {
+ if (isLoading) {
     return (
       <nav className="bg-white border-b border-gray-200">
         <div className="text-center p-4">Loading...</div>
