@@ -6,7 +6,6 @@ import { FiChevronRight, FiChevronLeft } from "react-icons/fi";
 import { useGlobalTranslation } from "@/hooks/useGlobalTranslation";
 import { useNavigation } from "@/context/NavigationContext"; 
 
-// Helper function to generate router paths
 const getLinkPath = (level, slug) => {
   if (level === 0) return `/page/${slug}`;
   if (level === 1) return `/subpage/${slug}`;
@@ -20,33 +19,11 @@ const Sidebar = () => {
 
   const location = useLocation();
 
-  // State for data
-  // const [menuItems, setMenuItems] = useState([]);
-  // const [isLoading, setIsLoading] = useState(true);
-  // const [error, setError] = useState(null);
-
-  // State for UI
   const [collapsed, setCollapsed] = useState(false);
   const [activeMenu, setActiveMenu] = useState(null);
   const [activeSubmenu, setActiveSubmenu] = useState(null);
 
-  // 1. Fetch navigation data on component mount
-  // useEffect(() => {
-  //   const fetchNavItems = async () => {
-  //     try {
-  //       const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/menus`);
-  //       setMenuItems(response.data);
-  //     } catch (err) {
-  //       setError(err.message);
-  //       console.error("Failed to fetch sidebar navigation items:", err);
-  //     } finally {
-  //       setIsLoading(false);
-  //     }
-  //   };
-  //   fetchNavItems();
-  // }, []);
-
-  // 2. Determine which nav items to display based on the current path
+  
   const filteredNavItems = useMemo(() => {
     if (!menuItems.length) return [];
 
@@ -79,8 +56,6 @@ const Sidebar = () => {
         return menuItems;
     }
   }, [location.pathname, menuItems]);
-
-  // 3. Automatically expand the active menu/submenu based on the current path
   useEffect(() => {
     const pathSegments = location.pathname.split('/').filter(Boolean);
     const currentSlug = pathSegments[1];
