@@ -16,6 +16,7 @@ const initialState = {
   od_title: "",
   en_description: "",
   od_description: "",
+  date: ""
 };
 
 // Helper function to check if rich text is effectively empty
@@ -43,6 +44,14 @@ const FormFieldsGroup = ({ formData, onInputChange, errors }) => (
       required 
       error={errors.od_title}
     />
+    <FormField
+        label="Date"
+        type="date" // This tells the component to render a date picker
+        value={formData.date}
+        onChange={(val) => onInputChange("date", val)}
+        required
+        error={errors.date}
+    />
   </div>
 );
 
@@ -63,6 +72,10 @@ const ActAndRuleForm = () => {
       const fetchActAndRule = async () => {
         try {
           const response = await axios.get(`${API_URL}/${id}`, {withCredentials:true});
+          const data = response.data;
+          if (data.date) {
+            data.date = data.date.split('T')[0];
+          }
           setFormData(response.data);
         } catch (error) {
           showModal("error", "Failed to load data for editing.");
@@ -97,6 +110,9 @@ const ActAndRuleForm = () => {
     }
     if (isRichTextEmpty(formData.od_description)) {
       newErrors.od_description = "Odia Description is required.";
+    }
+    if (!formData.date) {
+      newErrors.date = "Date is required.";
     }
     return newErrors;
   };
@@ -148,7 +164,7 @@ const ActAndRuleForm = () => {
       <Header title={isEditMode ? "Edit Act & Rule" : "Add Act & Rule"} onGoBack={handleGoBack} />
 
       <form onSubmit={handleSubmit}>
-        <div className="space-y-6">
+        <div className="">
           <FormFieldsGroup 
             formData={formData} 
             onInputChange={handleInputChange} 

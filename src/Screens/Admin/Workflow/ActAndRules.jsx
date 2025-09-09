@@ -19,6 +19,7 @@ const API_URL = "http://localhost:5000/api/act-and-rules";
 const ActAndRules = () => {
   // --- USE THE HOOK: All data logic is now handled here ---
   const { data, setData, refreshData, tableState } = useServerSideTable(API_URL);
+  console.log("Fetched Data:", data); // Debugging line to check fetched data
   
   const navigate = useNavigate();
   const { showModal } = useModal();
@@ -58,7 +59,6 @@ const ActAndRules = () => {
       header: "Date",
       accessor: "date",
       isSortable: true,
-      cell: ({ value }) => new Date(value).toLocaleDateString(),
     },
     {
       header: "Status",
