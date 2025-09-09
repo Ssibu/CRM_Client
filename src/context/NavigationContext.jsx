@@ -15,6 +15,7 @@ export const NavigationProvider = ({ children }) => {
     const fetchNavData = async () => {
       try {
         const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/menus`);
+        
         // Destructure the data from the new API response shape
         setNavigation(response.data.navigation || []);
         setSettings(response.data.settings || { showInnerpageSidebar: true });
