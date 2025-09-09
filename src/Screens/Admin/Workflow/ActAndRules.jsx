@@ -55,6 +55,12 @@ const ActAndRules = () => {
     { header: "Title (in English)", accessor: "en_title", isSearchable: true, isSortable: true },
     { header: "Title (in Odia)", accessor: "od_title", isSearchable: true, isSortable: true },
     {
+      header: "Date",
+      accessor: "date",
+      isSortable: true,
+      cell: ({ value }) => new Date(value).toLocaleDateString(),
+    },
+    {
       header: "Status",
       accessor: "status",
       isSortable: true,

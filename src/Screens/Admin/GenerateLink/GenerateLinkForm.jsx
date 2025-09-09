@@ -196,7 +196,7 @@ const [errors, setErrors] = useState({ title: "", file: "" });
   useEffect(() => {
     if (id) {
       axios
-        .get(`${import.meta.env.VITE_API_BASE_URL}/api/generated-links/${id}`)
+        .get(`${import.meta.env.VITE_API_BASE_URL}/api/generated-links/${id}`,{withCredentials: true})
         .then((res) => {
           setTitle(res.data.title || "");
           setExistingFile(res.data.filePath || ""); 
@@ -237,13 +237,13 @@ const [errors, setErrors] = useState({ title: "", file: "" });
       if (id) {
         await axios.put(
           `${import.meta.env.VITE_API_BASE_URL}/api/generated-links/${id}`,
-          formData
+          formData, { withCredentials: true }
         );
         showModal("success", "Link updated successfully!");
       } else {
         await axios.post(
           `${import.meta.env.VITE_API_BASE_URL}/api/generated-links`,
-          formData
+          formData,{withCredentials: true}
         );
         showModal("success","Link created successfully!");
       }
