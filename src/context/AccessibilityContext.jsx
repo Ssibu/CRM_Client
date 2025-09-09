@@ -9,7 +9,7 @@ export const AccessibilityProvider = ({ children }) => {
   const [letterSpacing, setLetterSpacing] = useState(0);    // In pixels
   const [lineHeight, setLineHeight] = useState(1.5);      // Unitless multiplier (e.g., 1.5 = 150%)
   const [isBigCursor, setIsBigCursor] = useState(false);
-  const [isNightMode, setIsNightMode] = useState(false);
+  const [isNightMode, setIsNightMode] = useState(false); 
 
   // === EFFECT TO APPLY STYLES GLOBALLY ===
   // This runs whenever a setting changes.
