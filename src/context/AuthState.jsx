@@ -111,13 +111,9 @@ import { useModal } from "./ModalProvider";
 const AuthState = ({ children }) => {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
-  // This loading state now primarily reflects login/logout processes
   const [loading, setLoading] = useState(false); 
   const [error, setError] = useState(null);
   const { showModal } = useModal();
-
-  // No more useEffect to fetch user here. This was the problem.
-
   const login = async (formData) => {
     setLoading(true);
     setError(null);

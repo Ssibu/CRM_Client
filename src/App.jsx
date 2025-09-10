@@ -6,8 +6,6 @@ import AuthLayout from './Routes/middleware/AuthLayout';
 import AdminLayout from './Routes/middleware/AdminLayout';
 import Layout from './Screens/Layout/Layout';
 import "highlight.js/styles/github.css"; 
-
-
 const App = () => {
   return (
     <React.Fragment>
