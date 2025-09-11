@@ -7,7 +7,7 @@ import { useModal } from "../../../context/ModalProvider";
 import DocumentUploader from "../../../Components/Admin/TextEditor/DocumentUploader";
 
 const UserForm = () => {
-  const [formData, setFormData] = useState({
+  const createInitialState = () => ({
     name: "",
     email: "",
     mobile: "",
@@ -15,7 +15,8 @@ const UserForm = () => {
     existingImageName: "",
     existingImageUrl: "",
   });
-
+  const [formData, setFormData] = useState(createInitialState());
+  const [originalData, setOriginalData] = useState(createInitialState())
   const [errors, setErrors] = useState({});
   const [error, setError] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -38,14 +39,16 @@ const UserForm = () => {
 
           const user = res.data.user;
 
-          setFormData({
+          const fetchedData = {
             name: user.name || "",
             email: user.email || "",
             mobile: user.mobile || "",
             profilePic: null,
             existingImageName: user.profilePic || "",
-            existingImageUrl: user.profilePicUrl || "", // use profilePicUrl directly here
-          });
+            existingImageUrl: user.profilePicUrl || "",
+          };
+          setFormData(fetchedData);
+          setOriginalData(fetchedData);
 
           setExistingImageRemoved(false);
           setError(null);
@@ -197,15 +200,12 @@ const UserForm = () => {
     }
   };
 
-  const handleReset = () => {
-    setFormData({
-      name: "",
-      email: "",
-      mobile: "",
-      profilePic: null,
-      existingImageName: "",
-      existingImageUrl: "",
-    });
+ const handleReset = () => {
+    if (isEditMode) {
+      setFormData(originalData);
+    } else {
+      setFormData(createInitialState());
+    }
     setErrors({});
     setError(null);
     setExistingImageRemoved(false);
