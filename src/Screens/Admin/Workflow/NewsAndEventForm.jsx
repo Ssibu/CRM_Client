@@ -32,6 +32,7 @@ const NewsAndEventForm = () => {
   const [isLoading, setIsLoading] = useState(isEditMode);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [originalData, setOriginalData] = useState(initialState);
+  const [originalDocumentName, setOriginalDocumentName] = useState('');
 
   useEffect(() => {
     if (isEditMode) {
@@ -42,7 +43,8 @@ const NewsAndEventForm = () => {
           const editableData = { en_title, od_title, eventDate, document: null };
           setFormData(editableData);
           setOriginalData(editableData);
-          setExistingDocumentName(document); // <-- Store only the filename
+          setExistingDocumentName(document);
+          setOriginalDocumentName(document); // <-- Store only the filename
         } catch (error) {
           showModal("error", error.response?.data?.message || "Failed to load event data for editing.");
         } finally {
@@ -130,6 +132,7 @@ const NewsAndEventForm = () => {
   if (isEditMode) {
     // In EDIT mode, we reset the form back to the original data we saved.
     setFormData(originalData);
+     setExistingDocumentName(originalDocumentName);
   } else {
     // In ADD mode, we reset the form to the blank initial state.
     setFormData(initialState);
