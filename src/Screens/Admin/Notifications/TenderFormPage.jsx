@@ -183,7 +183,7 @@ const handleFileChange = (fieldName, file, errorMessage) => {
 
 
   return (
-    <div className="p-6 min-h-[80vh]">
+    <div className="p-6 min-h-[80vh]"> 
       <Header
         title={isEditMode ? "Edit Tender" : "Add New Tender"}
         onGoBack={() => navigate("/admin/notifications/tenders")}
