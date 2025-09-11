@@ -59,6 +59,7 @@ const ActAndRuleForm = () => {
   const [errors, setErrors] = useState({}); // State to hold validation errors
   const [isLoading, setIsLoading] = useState(isEditMode);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [originalData, setOriginalData] = useState(initialState);
   
   useEffect(() => {
     if (isEditMode) {
@@ -66,6 +67,7 @@ const ActAndRuleForm = () => {
         try {
           const response = await axios.get(`${API_URL}/${id}`, {withCredentials:true});
           setFormData(response.data);
+          setOriginalData(response.data);
         } catch (error) {
           showModal("error", "Failed to load data for editing.");
           console.error("Error fetching data for edit:", error);
@@ -131,8 +133,14 @@ const ActAndRuleForm = () => {
   };
   
   const handleReset = () => {
-    setFormData(initialState);
-    setErrors({}); // Clear all errors on reset
+    if (isEditMode) {
+      // In edit mode, revert to the originally fetched data
+      setFormData(originalData);
+    } else {
+      // In add mode, clear the form to a blank state
+      setFormData(initialState);
+    }
+    setErrors({}); // Clear errors in both modes
   };
 
   const handleGoBack = () => {
@@ -167,7 +175,7 @@ const ActAndRuleForm = () => {
           onSubmit={handleSubmit}
           onCancel={handleGoBack}
           isSubmitting={isSubmitting}
-          onReset={!isEditMode ? handleReset : null}
+          onReset={handleReset}
         />
       </form>
     </div>
