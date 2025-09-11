@@ -30,6 +30,9 @@ const PolicyForm = () => {
   const [isFileMarkedForDeletion, setIsFileMarkedForDeletion] = useState(false);
   const [isLoading, setIsLoading] = useState(isEditMode);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [originalData, setOriginalData] = useState(initialState);
+  const [originalDocumentName, setOriginalDocumentName] = useState('');
+  
 
   useEffect(() => {
     if (isEditMode) {
@@ -37,8 +40,11 @@ const PolicyForm = () => {
         try {
           const response = await axios.get(`${API_URL}/${id}`, { withCredentials: true });
           const { en_title, od_title, document } = response.data;
-          setFormData({ en_title, od_title, document: null });
+          const editableData = { en_title, od_title, document: null };
+          setFormData(editableData);
+          setOriginalData(editableData);
           setExistingDocumentName(document);
+          setOriginalDocumentName(document);
         } catch (error) {
           showModal("error", "Failed to load policy data for editing.");
         } finally {
@@ -122,9 +128,16 @@ const PolicyForm = () => {
     }
   };
   const handleReset = () => {
-    setFormData(initialState);
+    if (isEditMode) {
+      
+      setFormData(originalData);  
+      setExistingDocumentName(originalDocumentName);
+    } else {
+      
+      setFormData(initialState);
+    }
     setErrors({});
-    setIsFileMarkedForDeletion(false); // Also reset this flag
+    setIsFileMarkedForDeletion(false);
   };
 
   return (
@@ -153,7 +166,7 @@ const PolicyForm = () => {
           onSubmit={handleSubmit}
           onCancel={() => navigate("/admin/notifications/policy")}
           isSubmitting={isSubmitting}
-          onReset={!isEditMode ? handleReset : null}
+          onReset={handleReset }
         />
       </form>
     </div>
