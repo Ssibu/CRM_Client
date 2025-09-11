@@ -59,7 +59,7 @@ const DocumentUploader = ({
 
   // Dynamically generate a user-friendly list of allowed extensions
   const allowedExtensions = useMemo(() => 
-    [...new Set(allowedTypes.map(type => type.split('/')[1].toUpperCase()))].join(', '),
+    [...new Set(allowedTypes.map(type => type.split('/')[1].toLowerCase()))].join(', '),
     [allowedTypes]
   );
 
