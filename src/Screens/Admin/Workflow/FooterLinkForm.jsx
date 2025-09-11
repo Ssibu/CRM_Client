@@ -27,6 +27,7 @@ const FooterlinkForm = () => {
   const [errors, setErrors] = useState({}); // State to hold validation errors
   const [isLoading, setIsLoading] = useState(isEditMode);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [originalData, setOriginalData] = useState(initialState);
 
   useEffect(() => {
     if (isEditMode) {
@@ -36,6 +37,7 @@ const FooterlinkForm = () => {
             withCredentials: true,
           });
           setFormData(response.data);
+          setOriginalData(response.data);
         } catch (error) {
           showModal("error", "Failed to load link data for editing.");
           console.error("Error fetching link data:", error);
@@ -100,8 +102,14 @@ const FooterlinkForm = () => {
   };
 
   const handleReset = () => {
-    setFormData(initialState);
-    setErrors({});
+    if (isEditMode) {
+      // In edit mode, revert to the originally fetched data
+      setFormData(originalData);
+    } else {
+      // In add mode, clear the form to a blank state
+      setFormData(initialState);
+    }
+    setErrors({}); // Clear errors in both modes
   };
 
   const handleGoBack = () => {
@@ -162,7 +170,7 @@ const FooterlinkForm = () => {
           onSubmit={handleSubmit}
           onCancel={handleGoBack}
           isSubmitting={isSubmitting}
-          onReset={!isEditMode ? handleReset : null}
+          onReset={handleReset}
         />
       </form>
     </div>

@@ -29,6 +29,9 @@ const BedStrengthForm = () => {
     const [isFileMarkedForDeletion, setIsFileMarkedForDeletion] = useState(false);
   const [isLoading, setIsLoading] = useState(isEditMode);
   const [isSubmitting, setIsSubmitting] = useState(false);
+    const [originalData, setOriginalData] = useState(initialState);
+    const [originalDocumentName, setOriginalDocumentName] = useState('');
+
 
   useEffect(() => {
     if (isEditMode) {
@@ -36,8 +39,13 @@ const BedStrengthForm = () => {
         try {
           const response = await axios.get(`${API_URL}/${id}`,{withCredentials:true});
           const { en_title, od_title, document } = response.data;
-          setFormData({ en_title, od_title, document: null });
+          const editableData = { en_title, od_title, document: null };
+          setFormData(editableData);
+          
+          // We store a copy of this data in our backup state for resetting
+          setOriginalData(editableData);
           setExistingDocument(document);
+          setOriginalDocumentName(document);
         } catch (error) {
           showModal("error", error.response?.data?.message || "Failed to load record for editing.");
         } finally {
@@ -127,10 +135,17 @@ const BedStrengthForm = () => {
     }
   };
 
-  const handleReset = () => {
-    setFormData(initialState);
+   const handleReset = () => {
+    if (isEditMode) {
+      
+      setFormData(originalData);  
+      setExistingDocument(originalDocumentName);
+    } else {
+      
+      setFormData(initialState);
+    }
     setErrors({});
-    setIsFileMarkedForDeletion(false); // Also reset this flag
+    setIsFileMarkedForDeletion(false);
   };
 
   const handleGoBack = () => {
@@ -197,7 +212,7 @@ const BedStrengthForm = () => {
           onSubmit={handleSubmit}
           onCancel={handleGoBack}
           isSubmitting={isSubmitting}
-          onReset={!isEditMode ? handleReset : null}
+          onReset={handleReset}
         />
       </form>
     </div>
