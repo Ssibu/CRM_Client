@@ -148,7 +148,8 @@ const SchemeForm = () => {
       <Header title={isEditMode ? "Edit Scheme" : "Add Scheme"} onGoBack={handleGoBack} />
 
       <form onSubmit={handleSubmit}>
-        <div className="bg-white p-6 rounded-lg shadow-md grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+        <div className="bg-white p-6 rounded-lg shadow-md">
+        <div className=" grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
             <FormField 
               label="Title (In English)" 
               value={formData.en_title} 
@@ -195,6 +196,7 @@ const SchemeForm = () => {
           isSubmitting={isSubmitting}
           onReset={!isEditMode ? handleReset : null}
         />
+        </div>
       </form>
       </div>
     
