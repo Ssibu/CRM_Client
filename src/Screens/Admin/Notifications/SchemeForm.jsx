@@ -30,6 +30,10 @@ const SchemeForm = () => {
   const [isFileMarkedForDeletion, setIsFileMarkedForDeletion] = useState(false);
   const [isLoading, setIsLoading] = useState(isEditMode);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [originalData, setOriginalData] = useState(initialState);
+  const [originalDocumentName, setOriginalDocumentName] = useState('');
+  
+  
 
   useEffect(() => {
     if (isEditMode) {
@@ -37,8 +41,13 @@ const SchemeForm = () => {
         try {
           const response = await axios.get(`${API_URL}/${id}`,{withCredentials:true});
           const { en_title, od_title, document } = response.data;
-          setFormData({ en_title, od_title, document: null });
+          const editableData = { en_title, od_title, document: null };
+          setFormData(editableData);
+          
+          // We store a copy of this data in our backup state for resetting
+          setOriginalData(editableData);
           setExistingDocument(document);
+          setOriginalDocumentName(document);
         } catch (error) {
           showModal("error", "Failed to load scheme data for editing.");
         } finally {
@@ -124,9 +133,16 @@ const SchemeForm = () => {
   };
 
   const handleReset = () => {
-    setFormData(initialState);
+    if (isEditMode) {
+      
+      setFormData(originalData);  
+      setExistingDocument(originalDocumentName);
+    } else {
+      
+      setFormData(initialState);
+    }
     setErrors({});
-    setIsFileMarkedForDeletion(false); // Also reset this flag
+    setIsFileMarkedForDeletion(false);
   };
 
   const handleGoBack = () => {
@@ -194,7 +210,7 @@ const SchemeForm = () => {
           onSubmit={handleSubmit}
           onCancel={handleGoBack}
           isSubmitting={isSubmitting}
-          onReset={!isEditMode ? handleReset : null}
+          onReset={handleReset}
         />
         </div>
       </form>
