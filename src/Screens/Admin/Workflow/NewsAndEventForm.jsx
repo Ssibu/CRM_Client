@@ -31,6 +31,7 @@ const NewsAndEventForm = () => {
   const [isFileMarkedForDeletion, setIsFileMarkedForDeletion] = useState(false);
   const [isLoading, setIsLoading] = useState(isEditMode);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [originalData, setOriginalData] = useState(initialState);
 
   useEffect(() => {
     if (isEditMode) {
@@ -38,7 +39,9 @@ const NewsAndEventForm = () => {
         try {
           const response = await axios.get(`${API_URL}/${id}`, { withCredentials: true });
           const { en_title, od_title, eventDate, document } = response.data;
-          setFormData({ en_title, od_title, eventDate, document: null });
+          const editableData = { en_title, od_title, eventDate, document: null };
+          setFormData(editableData);
+          setOriginalData(editableData);
           setExistingDocumentName(document); // <-- Store only the filename
         } catch (error) {
           showModal("error", error.response?.data?.message || "Failed to load event data for editing.");
@@ -123,11 +126,19 @@ const NewsAndEventForm = () => {
     }
   };
 
-  const handleReset = () => {
+ const handleReset = () => {
+  if (isEditMode) {
+    // In EDIT mode, we reset the form back to the original data we saved.
+    setFormData(originalData);
+  } else {
+    // In ADD mode, we reset the form to the blank initial state.
     setFormData(initialState);
-    setErrors({});
-    setIsFileMarkedForDeletion(false); // Also reset this flag
-  };
+  }
+  
+  // These should be reset in both modes
+  setErrors({});
+  setIsFileMarkedForDeletion(false); 
+};
 
   if(isLoading) return <div className="flex justify-center items-center h-96" >Loading...</div>
 
@@ -162,7 +173,7 @@ const NewsAndEventForm = () => {
           onSubmit={handleSubmit}
           onCancel={() => navigate("/admin/workflow/news-and-events")}
           isSubmitting={isSubmitting}
-          onReset={!isEditMode ? handleReset : null}
+          onReset={ handleReset }
         />
       </form>
     </div>
