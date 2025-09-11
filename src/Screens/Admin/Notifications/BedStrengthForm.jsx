@@ -29,8 +29,8 @@ const BedStrengthForm = () => {
     const [isFileMarkedForDeletion, setIsFileMarkedForDeletion] = useState(false);
   const [isLoading, setIsLoading] = useState(isEditMode);
   const [isSubmitting, setIsSubmitting] = useState(false);
-    const [originalData, setOriginalData] = useState(initialState);
-    const [originalDocumentName, setOriginalDocumentName] = useState('');
+  const [originalData, setOriginalData] = useState(initialState);
+  const [originalDocumentName, setOriginalDocumentName] = useState('');
 
 
   useEffect(() => {
