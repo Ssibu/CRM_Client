@@ -1,8 +1,7 @@
 import React, { useState, useMemo, useCallback } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { FaEdit, FaCheck, FaTrash } from "react-icons/fa";
-import { IoClose } from "react-icons/io5";
+import { FaEdit, FaCheck, FaTrash,FaTimes } from "react-icons/fa";
 import { CheckCircle, XCircle, AlertTriangle } from "lucide-react";
 
 import MenuTable from "../../../Components/Admin/Menu/MenuTable";
@@ -156,7 +155,7 @@ const HolidayListPage = () => {
               }
               title={row.original.is_active ? "Deactivate" : "Activate"}
             >
-              {row.original.is_active ? <IoClose size={18} /> : <FaCheck />}
+              {row.original.is_active ? <FaTimes /> : <FaCheck />}
             </button>
             
 
@@ -211,7 +210,7 @@ const HolidayListPage = () => {
   const modalConfig = getModalConfig();
 
   return (
-    <div className="py-4 min-h-[80vh]">
+    <div className="min-h-[80vh]">
       <MenuTable
         Ltext="Holidays"
         Rtext="Add Holiday"
