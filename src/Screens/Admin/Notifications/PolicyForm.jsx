@@ -154,6 +154,7 @@ const PolicyForm = () => {
             <DocumentUploader
               label="Upload Policy Document"
               file={formData.document}
+              required="true"
               onFileChange={handleFileChange}
               error={errors.document}
               // Configuration for Policy documents

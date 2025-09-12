@@ -195,6 +195,7 @@ const SchemeForm = () => {
                   // Add Configuration
                   allowedTypes={["application/pdf", "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"]}
                   maxSizeMB={5}
+                  required="true"
                   
                   // Add props for handling existing files
                   existingFileName={existingDocument}

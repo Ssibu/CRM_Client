@@ -341,6 +341,7 @@ const handleReset = () => {
                 "image/gif",
                 "image/webp",
               ]}
+              required="true"
               maxSizeMB={5}
             />
              {/* Link */}

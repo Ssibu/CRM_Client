@@ -193,6 +193,7 @@ const BedStrengthForm = () => {
                   file={formData.document}
                   onFileChange={handleFileChange}
                   error={errors.document}
+                  required="true"
                   
                   // Add Configuration
                   allowedTypes={["application/pdf", "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"]}

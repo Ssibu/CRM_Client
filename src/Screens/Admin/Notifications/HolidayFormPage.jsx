@@ -129,6 +129,7 @@ const HolidayFormPage = () => {
               value={formData.name} 
               onChange={(value) => handleChange('name', value)} 
               error={errors.name} 
+              required="true"
             />
             <FormField 
               label="Date" 
@@ -137,6 +138,7 @@ const HolidayFormPage = () => {
               value={formData.holiday_date} 
               onChange={(value) => handleChange('holiday_date', value)} 
               error={errors.holiday_date}
+              required="true"
             />
             {/* CHANGED: The 'onChange' for SelectField is also adapted to pass name and value */}
             <SelectField 

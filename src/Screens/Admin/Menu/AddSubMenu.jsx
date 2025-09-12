@@ -324,6 +324,7 @@ if (isEditMode) {
                   "image/gif",
                 ]}
                 maxSizeMB={5}
+                required="true"
               />
 
               <FormField

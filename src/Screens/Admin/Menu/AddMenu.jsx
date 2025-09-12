@@ -286,6 +286,7 @@ const [initialData, setInitialData] = useState(null);
                   "image/gif",
                 ]}
                 maxSizeMB={5}
+                required="true"
               />
 
               <FormField

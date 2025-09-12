@@ -155,9 +155,9 @@ const NoticeFormPage = () => {
       <div className="">
         <form onSubmit={handleSubmit} noValidate>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <FormField label="Title (English)" placeholder="English title here" name="en_title" type="text" value={formData.en_title} onChange={(value) => handleChange("en_title", value)} error={errors.en_title} />
-            <FormField label="Title (Odia)" placeholder="Odia title here" name="od_title" type="text" value={formData.od_title} onChange={(value) => handleChange("od_title", value)} error={errors.od_title} />
-            <FormField label="Date" name="date" type="date" value={formData.date} onChange={(value) => handleChange("date", value)} error={errors.date} />
+            <FormField label="Title (English)" placeholder="English title here" name="en_title" type="text" value={formData.en_title} onChange={(value) => handleChange("en_title", value)} error={errors.en_title} required="true" />
+            <FormField label="Title (Odia)" placeholder="Odia title here" name="od_title" type="text" value={formData.od_title} onChange={(value) => handleChange("od_title", value)} error={errors.od_title} required="true" />
+            <FormField label="Date" name="date" type="date" value={formData.date} onChange={(value) => handleChange("date", value)} error={errors.date} required="true" />
             
             <DocumentUploader
               label="Notice Document"
@@ -167,6 +167,7 @@ const NoticeFormPage = () => {
               error={errors.doc}
               allowedTypes={["application/pdf"]}
               maxSizeMB={1}
+              required="true"
               file={file} // Pass the new file object
               existingFileName={existingFileName}
               existingFileUrl={

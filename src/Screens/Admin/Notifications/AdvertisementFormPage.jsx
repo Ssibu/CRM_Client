@@ -157,6 +157,7 @@ const AdvertisementFormPage = () => {
                             onFileChange={(file, error) => handleFileChange(file, error, 'en_adphoto')}
                             onRemove={() => handleRemoveFile('en_adphoto')}
                             error={errors.en_adphoto}
+                            required="true"
                             allowedTypes={['image/jpeg', 'image/png', 'image/webp']}
                             maxSizeMB={1}
                         />
@@ -168,6 +169,7 @@ const AdvertisementFormPage = () => {
                             onFileChange={(file, error) => handleFileChange(file, error, 'od_adphoto')}
                             onRemove={() => handleRemoveFile('od_adphoto')}
                             error={errors.od_adphoto}
+                            required="true"
                             allowedTypes={['image/jpeg', 'image/png', 'image/webp']}
                             maxSizeMB={1}
                         />
