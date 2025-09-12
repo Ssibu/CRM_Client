@@ -149,7 +149,7 @@ const TenderFormPage = () => {
     <div
       className="min-h-[80vh]"
     >
-    <div className="bg-white p-6 shadow">
+    <div className="bg-white p-4 shadow">
       <Header
         title={isEditMode ? "Edit Tender" : "Add New Tender"}
         onGoBack={() => navigate("/admin/notifications/tenders")}
