@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { chatbotCategoryAPI } from "@/services/api";
+import { ArrowLeft } from "lucide-react";
 import { ModalDialog } from "@/Components/Admin/Modal/MessageModal";
 import FormActions from "@/Components/Admin/Add/FormActions";
 
@@ -185,64 +186,66 @@ const AddChatbotCategory = () => {
   };
 
   return (
-    <div className="min-h-[80vh] py-6 font-sans">
-      <div className="p-6 bg-white shadow rounded-xl">
+    <div className="min-h-[80vh]">
+      <div className="p-4 bg-white shadow">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-xl font-semibold">
             {isEditMode ? "Edit Chatbot Category" : "Add Chatbot Category"}
           </h2>
           <button
             onClick={handleCancel}
-            className="bg-yellow-400 hover:bg-yellow-500 text-black px-4 py-2 rounded"
+             className="bg-yellow-400 hover:bg-yellow-500 text-gray-800 px-4 py-2 rounded-md font-medium flex items-center gap-2 transition"
             disabled={loading}
           >
-            ← Go Back
+           <ArrowLeft size={16} /> Go Back
           </button>
         </div>
 
         {/* The form JSX remains the same */}
         <form onSubmit={handleSubmit} className="space-y-6" noValidate>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label className="block text-sm font-medium mb-1">
-                Category (in English) <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                name="en_title"
-                value={formData.en_title}
-                onChange={handleChange}
-                placeholder="Enter category in English"
-                className={`w-full border rounded px-3 py-2 ${
-                  fieldErrors.en_title ? "border-red-500" : ""
-                }`}
-                disabled={loading}
-              />
-              {fieldErrors.en_title && (
-                <p className="text-red-500 text-sm mt-1">{fieldErrors.en_title}</p>
-              )}
-            </div>
+    <div>
+      <label htmlFor="en_title" className="block text-sm font-medium mb-1">
+        Category (in English) <span className="text-red-500">*</span>
+      </label>
+      <input
+        type="text"
+        id="en_title" // Added for accessibility
+        name="en_title"
+        value={formData.en_title}
+        onChange={handleChange}
+        placeholder="Enter category in English"
+        className={`w-full rounded px-3 py-2 border ${ // <-- Added "border" class
+          fieldErrors.en_title ? "border-red-500" : "border-gray-300"
+        }`}
+        disabled={loading}
+      />
+      {fieldErrors.en_title && (
+        <p className="text-red-500 text-sm mt-1">{fieldErrors.en_title}</p>
+      )}
+    </div>
 
-            <div>
-              <label className="block text-sm font-medium mb-1">
-                Category (in Odia) <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                name="od_title"
-                value={formData.od_title}
-                onChange={handleChange}
-                placeholder="Enter category in Odia"
-                className={`w-full border rounded px-3 py-2 ${
-                  fieldErrors.od_title ? "border-red-500" : ""
-                }`}
-                disabled={loading}
-              />
-              {fieldErrors.od_title && (
-                <p className="text-red-500 text-sm mt-1">{fieldErrors.od_title}</p>
-              )}
-            </div>
-          </div>
+    <div>
+      <label htmlFor="od_title" className="block text-sm font-medium mb-1">
+        Category (in Odia) <span className="text-red-500">*</span>
+      </label>
+      <input
+        type="text"
+        id="od_title" // Added for accessibility
+        name="od_title"
+        value={formData.od_title}
+        onChange={handleChange}
+        placeholder="Enter category in Odia"
+        className={`w-full rounded px-3 py-2 border ${ // <-- Added "border" class
+          fieldErrors.od_title ? "border-red-500" : "border-gray-300"
+        }`}
+        disabled={loading}
+      />
+      {fieldErrors.od_title && (
+        <p className="text-red-500 text-sm mt-1">{fieldErrors.od_title}</p>
+      )}
+    </div>
+  </div>
 
           {/* CHANGED: Pass isEditMode and the new handleReset to FormActions */}
           <FormActions
