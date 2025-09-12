@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { FaEdit, FaCheck, FaFilePdf, FaListAlt } from "react-icons/fa";
+import { FaEdit, FaCheck, FaFilePdf, FaListAlt,FaTimes } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
 import { CheckCircle, XCircle } from "lucide-react";
 
@@ -166,7 +166,7 @@ const TenderListPage = () => {
               }
               title={row.original.is_active ? "Deactivate" : "Activate"}
             >
-              {row.original.is_active ? <IoClose /> : <FaCheck />}
+              {row.original.is_active ? <FaTimes /> : <FaCheck />}
             </button>
                  <button
               onClick={() => navigate(`edit/${row.original.id}`)}
