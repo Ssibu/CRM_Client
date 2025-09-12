@@ -92,7 +92,7 @@ const GenerateLinkPage = () => {
       header: "Action",
       accessor: "actions",
       cell: ({ row }) => (
-        <div className="flex gap-3">
+        <div className="flex space-x-2">
           <button
             onClick={() => navigate(`/admin/generate-link/edit/${row.original.id}`)}
             className="text-blue-600 hover:text-blue-800"
@@ -112,7 +112,7 @@ const numberedLinks = filteredLinks.map((item, idx) => ({
 
 
   return (
-    <div className="p-6 min-h-[80vh]">
+    <div className="min-h-[80vh]">
       {/* The external search bar is not present here, as per your request. */}
       {/* MenuTable will handle its own search input using the passed tableState props. */}
       <MenuTable
