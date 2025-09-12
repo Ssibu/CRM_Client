@@ -194,7 +194,7 @@ const TenderListPage = () => {
   );
 
   return (
-    <div className="p-6 min-h-[80vh]">
+    <div className="py-4 min-h-[80vh]">
       <MenuTable
         Ltext="Tenders"
         Rtext="Add Tender"
