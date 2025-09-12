@@ -83,7 +83,7 @@ const Scheme = () => {
             target="_blank" 
             rel="noopener noreferrer" 
             title={filename}
-            className="cursor-pointer" // Ensures the pointer cursor is shown
+            className="cursor-pointer items-center " // Ensures the pointer cursor is shown
           >
             {getIcon()}
           </a>

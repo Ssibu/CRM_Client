@@ -1,7 +1,6 @@
 import React, { useState, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaEdit,FaFilePdf, FaFileWord, FaFileImage, FaFileAlt, FaFileExcel } from 'react-icons/fa';
-import { Check, X } from "lucide-react";
+import { FaEdit,FaFilePdf, FaFileWord, FaFileImage, FaFileAlt, FaFileExcel,FaTimes,FaCheck } from 'react-icons/fa';
 import { VscVmActive } from "react-icons/vsc";
 import axios from 'axios';
 
@@ -109,14 +108,14 @@ const Policy = () => {
     {
       header: "Actions",
       cell: ({ row }) => (
-        <div className="flex space-x-3">
+        <div className="flex space-x-2">
           <button 
             onClick={() => openToggleModal(row.original)} 
             title={`Set to ${!row.original.is_active ? 'Active' : 'Inactive'}`}
             className={row.original.is_active ? 'text-green-500 hover:text-green-700' : 'text-red-500 hover:text-red-700'}
           >
             {/* CORRECTED: Use the more intuitive Toggle icons */}
-             {row.original.is_active ? <X size={20} className="text-red-500" /> : <Check size={20} className="text-green-500" />}
+             {row.original.is_active ? <FaTimes className="text-red-500" /> : <FaCheck className="text-green-500" />}
           </button>
           <button 
             onClick={() => navigate(`/admin/notifications/policy/edit/${row.original.id}`)} 
@@ -131,7 +130,7 @@ const Policy = () => {
   ], [tableState.currentPage, tableState.entriesPerPage, navigate, openToggleModal]); // CORRECTED: Added dependency
 
   return (
-    <div className="min-h-[80vh] py-4 font-sans">
+    <div className="min-h-[80vh]">
       <MenuTable 
         Ltext="Policy List" 
         Rtext="Add Policy" 
