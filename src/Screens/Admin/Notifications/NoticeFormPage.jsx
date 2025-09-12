@@ -150,7 +150,7 @@ const NoticeFormPage = () => {
     <div
       className="min-h-[80vh]"
     >
-    <div className="bg-white p-6 shadow">
+    <div className="bg-white p-4 shadow">
       <Header title={isEditMode ? "Edit Notice" : "Add New Notice"} onGoBack={() => navigate('/admin/notifications/notices')} />
       <div className="">
         <form onSubmit={handleSubmit} noValidate>

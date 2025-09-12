@@ -180,7 +180,7 @@ const AdvertisementListPage = () => {
   );
 
   return (
-    <div className="py-4 min-h-[80vh]">
+    <div className=" min-h-[80vh]">
       <MenuTable
         Ltext="Advertisements"
         Rtext="Add Advertisement"

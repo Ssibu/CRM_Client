@@ -140,9 +140,12 @@ const AdvertisementFormPage = () => {
     }, [originalData, originalExistingFileNames]);
     
     return (
-        <div className="p-6 min-h-[80vh]">
+        <div
+      className="min-h-[80vh]"
+    >
+        <div className="bg-white p-4 shadow">
             <Header title={isEditMode ? 'Edit Advertisement' : 'Add New Advertisement'} onGoBack={() => navigate('/admin/notifications/advertisements')} />
-            <div className="bg-white p-8 rounded-lg shadow-md">
+            <div className="">
                 <form onSubmit={handleSubmit} noValidate>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <DocumentUploader
@@ -179,6 +182,7 @@ const AdvertisementFormPage = () => {
                     />
                 </form>
             </div>
+        </div>
         </div>
     );
 };
