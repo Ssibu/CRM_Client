@@ -238,7 +238,7 @@ const handleReset = () => {
   const handleGoBack = () => navigate(-1);
     
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className=" bg-white p-6">
       <Header
         title={isEditMode ? "Edit Sub-SubMenu" : "Add Sub-SubMenu"}
         onGoBack={handleGoBack}
@@ -367,6 +367,7 @@ const handleReset = () => {
       value={formData.en_description}
       onChange={(val) => handleInputChange("en_description", val)}
       placeholder="Enter description..."
+      className="w-full"
     />
   </div>
   {errors.en_description && (

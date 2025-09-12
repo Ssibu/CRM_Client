@@ -1,5 +1,10 @@
 .ck-editor__editable_inline {
-    min-height: 400px;
+    
+  min-height: 400px !important;
+}
+
+.editor-container__editor{
+  width: 100%;
 }
 
 @media print {

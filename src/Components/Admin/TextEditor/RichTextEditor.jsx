@@ -244,7 +244,7 @@ const RichTextEditor = ({ value, onChange, placeholder, error }) => {
                 'mediaEmbed', 'insertTable', 'highlight', 'blockQuote', 'codeBlock', 'htmlEmbed', '|',
                 'alignment', '|', 'bulletedList', 'numberedList', 'todoList', 'outdent', 'indent'
             ],
-            shouldNotGroupWhenFull: false
+            shouldNotGroupWhenFull: true
         },
         plugins: [
             Alignment, AutoImage, AutoLink, Autosave, Base64UploadAdapter, BlockQuote, Bold, Bookmark, Code, CodeBlock,
@@ -362,7 +362,7 @@ const RichTextEditor = ({ value, onChange, placeholder, error }) => {
     }
 
     return (
-        <div  className='w-full' >
+        <div  className='container' >
             <div className={`${containerClasses}`} ref={editorContainerRef}>
                 <div className="editor-container__editor ">
                     <div ref={editorRef}   >
@@ -375,6 +375,7 @@ const RichTextEditor = ({ value, onChange, placeholder, error }) => {
                                     const wordCountPlugin = editor.plugins.get('WordCount');
                                     editorWordCountRef.current.appendChild(wordCountPlugin.wordCountContainer);
                                 }
+                                
                             }}
                             onChange={(event, editor) => {
                                 const data = editor.getData();
