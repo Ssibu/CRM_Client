@@ -62,7 +62,7 @@ const ManageCorrigendumsPage = () => {
     }
 
     return (
-        <div className="p-6 min-h-[80vh] space-y-6">
+        <div className="min-h-[80vh] p-4  bg-white shadow-md">
             <Header title={`Corrigendums for: ${tender?.en_title || ''}`} onGoBack={() => navigate('/admin/notifications/tenders')} />
 
             {/* Section 1: The Add/Edit Form */}

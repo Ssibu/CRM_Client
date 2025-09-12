@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import axios from 'axios';
-import { FaEdit, FaCheck, FaFilePdf } from "react-icons/fa";
+import { FaEdit, FaCheck, FaFilePdf,FaTimes } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
 import { CheckCircle, XCircle } from "lucide-react";
 
@@ -107,7 +107,7 @@ const CorrigendumList = ({ corrigendums, onEdit, onDataChange }) => {
                       className={row.original.is_active ? "text-red-500 hover:text-red-700" : "text-green-500 hover:text-green-700"}
                       title={row.original.is_active ? "Deactivate Corrigendum" : "Activate Corrigendum"}
                     >
-                        {row.original.is_active ? <IoClose size={18} /> : <FaCheck />}
+                        {row.original.is_active ? <FaTimes  /> : <FaCheck />}
                     </button>
                 </div>
             ),
@@ -115,7 +115,7 @@ const CorrigendumList = ({ corrigendums, onEdit, onDataChange }) => {
     ], [onEdit, onDataChange]);
 
     return (
-        <div className="bg-white rounded-lg shadow-md">
+        <div className="">
             <MenuTable
                 Ltext="Existing Corrigendums"
                 // No Rtext or addPath needed as the form is on the same page

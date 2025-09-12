@@ -133,7 +133,7 @@ const handleChange = (name, value) => {
 
      
     return (
-        <div className="bg-white p-8 rounded-lg shadow-md">
+        <div className=" ">
             <h2 className="text-xl font-bold mb-6 pb-4 border-b">
                 {isEditMode ? 'Edit Corrigendum' : 'Add New Corrigendum'}
             </h2>
