@@ -211,7 +211,7 @@ const HolidayListPage = () => {
   const modalConfig = getModalConfig();
 
   return (
-    <div className="p-6 min-h-[80vh]">
+    <div className="py-4 min-h-[80vh]">
       <MenuTable
         Ltext="Holidays"
         Rtext="Add Holiday"
