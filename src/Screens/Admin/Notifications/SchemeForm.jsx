@@ -160,11 +160,14 @@ const SchemeForm = () => {
   }
 
   return (
-    <div>
+    <div
+      className="min-h-[80vh]"
+    >
+    <div className="bg-white p-4 shadow">
       <Header title={isEditMode ? "Edit Scheme" : "Add Scheme"} onGoBack={handleGoBack} />
 
       <form onSubmit={handleSubmit}>
-        <div className="bg-white p-6 rounded-lg shadow-md">
+        <div >
         <div className=" grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
             <FormField 
               label="Title (In English)" 
@@ -214,6 +217,7 @@ const SchemeForm = () => {
         />
         </div>
       </form>
+      </div>
       </div>
     
   );
