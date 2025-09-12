@@ -158,11 +158,14 @@ const FormForm = () => {
   }
 
   return (
-    <div>
+    <div
+      className="min-h-[80vh]"
+    >
+    <div className="bg-white p-4 shadow">
       <Header title={isEditMode ? "Edit Form" : "Add Form"} onGoBack={handleGoBack} />
 
       <form onSubmit={handleSubmit}>
-        <div className="bg-white p-6 rounded-lg shadow-md grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+        <div className=" grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
             <FormField 
               label="Title (In English)" 
               value={formData.en_title} 
@@ -210,6 +213,7 @@ const FormForm = () => {
           onReset={handleReset}
         />
       </form>
+    </div>
     </div>
   );
 };
