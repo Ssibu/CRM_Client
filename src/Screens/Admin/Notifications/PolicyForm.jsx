@@ -141,10 +141,13 @@ const PolicyForm = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div
+      className="min-h-[80vh]"
+    >
+    <div className="bg-white p-4 shadow">
       <Header title={isEditMode ? "Edit Policy" : "Add Policy"} onGoBack={() => navigate("/admin/notifications/policy")} />
       <form onSubmit={handleSubmit}>
-        <div className="bg-white p-6 rounded-lg shadow-md grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+        <div className=" grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
             <FormField label="Title (In English)" placeholder="English title here" value={formData.en_title} onChange={(val) => handleInputChange("en_title", val)} required error={errors.en_title} />
             <FormField label="Title (In Odia)" placeholder="Odia title here" value={formData.od_title} onChange={(val) => handleInputChange("od_title", val)} required error={errors.od_title} />
             
@@ -169,6 +172,7 @@ const PolicyForm = () => {
           onReset={handleReset }
         />
       </form>
+    </div>
     </div>
   );
 };
