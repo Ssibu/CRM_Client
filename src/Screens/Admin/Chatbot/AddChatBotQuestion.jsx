@@ -4,12 +4,13 @@ import { chatbotCategoryAPI } from "../../../services/api";
 import chatbotQuestionAPI from "../../../services/chatbotQuestionAPI";
 import { ModalDialog } from "../../../Components/Admin/Modal/MessageModal";
 import FormActions from "../../../Components/Admin/Add/FormActions";
+import { ArrowLeft } from "lucide-react";
 
 // NEW: Define the initial empty state for reusability.
 const INITIAL_FORM_STATE = {
   category_id: "",
   en_question: "",
-  od_question: ""
+  od_question: "",
 };
 
 const AddChatBotQuestion = () => {
@@ -29,17 +30,17 @@ const AddChatBotQuestion = () => {
   const [modal, setModal] = useState({
     open: false,
     variant: "info",
-    message: ""
+    message: "",
   });
 
   // Fetch categories for the dropdown (no changes here)
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await chatbotCategoryAPI.getAll(1, 1000, '');
+        const response = await chatbotCategoryAPI.getAll(1, 1000, "");
         setCategories(response.data.data || []);
       } catch (error) {
-        console.error('Error fetching categories:', error);
+        console.error("Error fetching categories:", error);
         setError("Failed to load categories for the dropdown.");
       }
     };
@@ -50,20 +51,24 @@ const AddChatBotQuestion = () => {
   useEffect(() => {
     if (isEditMode) {
       setLoading(true);
-      chatbotQuestionAPI.get(id)
-        .then(response => {
-          const { category_id, en_question, od_question } = response.data.question;
-          
+      chatbotQuestionAPI
+        .get(id)
+        .then((response) => {
+          const { category_id, en_question, od_question } =
+            response.data.question;
+
           // CHANGED: Create a structured data object from the fetched question.
           const fetchedData = { category_id, en_question, od_question };
-          
+
           // CHANGED: Set both the form data and the original data for reset functionality.
           setFormData(fetchedData);
           setOriginalData(fetchedData);
         })
-        .catch(err => {
+        .catch((err) => {
           console.error("Failed to fetch question:", err);
-          setError("Could not load the question data. Please go back and try again.");
+          setError(
+            "Could not load the question data. Please go back and try again."
+          );
         })
         .finally(() => setLoading(false));
     }
@@ -78,7 +83,7 @@ const AddChatBotQuestion = () => {
     }));
 
     if (fieldErrors[name]) {
-      setFieldErrors(prev => ({ ...prev, [name]: "" }));
+      setFieldErrors((prev) => ({ ...prev, [name]: "" }));
     }
     if (error) setError("");
   };
@@ -110,19 +115,25 @@ const AddChatBotQuestion = () => {
   // checkForDuplicates function remains the same
   const checkForDuplicates = async () => {
     try {
-      const response = await chatbotQuestionAPI.getAll(1, 1000, '');
+      const response = await chatbotQuestionAPI.getAll(1, 1000, "");
       const questions = response.data.questions || [];
 
-      const englishDuplicate = questions.find(question =>
-        question.en_question.toLowerCase() === formData.en_question.trim().toLowerCase() &&
-        (!isEditMode || question.id !== parseInt(id))
+      const englishDuplicate = questions.find(
+        (question) =>
+          question.en_question.toLowerCase() ===
+            formData.en_question.trim().toLowerCase() &&
+          (!isEditMode || question.id !== parseInt(id))
       );
-      const odiaDuplicate = questions.find(question =>
-        question.od_question === formData.od_question.trim() &&
-        (!isEditMode || question.id !== parseInt(id))
+      const odiaDuplicate = questions.find(
+        (question) =>
+          question.od_question === formData.od_question.trim() &&
+          (!isEditMode || question.id !== parseInt(id))
       );
 
-      return { englishDuplicate: !!englishDuplicate, odiaDuplicate: !!odiaDuplicate };
+      return {
+        englishDuplicate: !!englishDuplicate,
+        odiaDuplicate: !!odiaDuplicate,
+      };
     } catch (error) {
       console.error("Error checking for duplicates:", error);
       return { englishDuplicate: false, odiaDuplicate: false };
@@ -137,12 +148,20 @@ const AddChatBotQuestion = () => {
     setLoading(true);
     const duplicates = await checkForDuplicates();
     if (duplicates.englishDuplicate) {
-      setModal({ open: true, variant: "error", message: "A question with this English text already exists!" });
+      setModal({
+        open: true,
+        variant: "error",
+        message: "A question with this English text already exists!",
+      });
       setLoading(false);
       return;
     }
     if (duplicates.odiaDuplicate) {
-      setModal({ open: true, variant: "error", message: "A question with this Odia text already exists!" });
+      setModal({
+        open: true,
+        variant: "error",
+        message: "A question with this Odia text already exists!",
+      });
       setLoading(false);
       return;
     }
@@ -150,20 +169,29 @@ const AddChatBotQuestion = () => {
     const submitData = {
       category_id: formData.category_id,
       en_question: formData.en_question.trim(),
-      od_question: formData.od_question.trim()
+      od_question: formData.od_question.trim(),
     };
 
     try {
       if (isEditMode) {
         await chatbotQuestionAPI.update(id, submitData);
-        setModal({ open: true, variant: "success", message: "Question updated successfully!" });
+        setModal({
+          open: true,
+          variant: "success",
+          message: "Question updated successfully!",
+        });
       } else {
         await chatbotQuestionAPI.create(submitData);
-        setModal({ open: true, variant: "success", message: "Question created successfully!" });
+        setModal({
+          open: true,
+          variant: "success",
+          message: "Question created successfully!",
+        });
       }
     } catch (error) {
       console.error("Error submitting question:", error);
-      const errorMessage = error.response?.data?.message || "An unexpected error occurred.";
+      const errorMessage =
+        error.response?.data?.message || "An unexpected error occurred.";
       setModal({ open: true, variant: "error", message: errorMessage });
     } finally {
       setLoading(false);
@@ -190,85 +218,105 @@ const AddChatBotQuestion = () => {
       navigate("/admin/manage-chatbot/chatbot-question"); // Then navigate
     }
   };
-  
-  const pageTitle = isEditMode ? "Edit Chatbot Question" : "Add Chatbot Question";
+
+  const pageTitle = isEditMode
+    ? "Edit Chatbot Question"
+    : "Add Chatbot Question";
 
   return (
-    <div className="min-h-[80vh] py-4 font-sans">
-      <div className="p-6 bg-white shadow rounded-xl container mx-auto">
+    <div className="min-h-[80vh]">
+      <div className="p-4 bg-white shadow">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-xl font-semibold">{pageTitle}</h2>
           <button
             onClick={handleCancel}
-            className="px-4 py-2 bg-yellow-400 text-black rounded hover:bg-yellow-500 transition"
+            className="bg-yellow-400 hover:bg-yellow-500 text-gray-800 px-4 py-2 rounded-md font-medium flex items-center gap-2 transition"
             disabled={loading}
           >
-            ← Go Back
+            <ArrowLeft size={16} /> Go Back
           </button>
         </div>
 
         {loading && isEditMode ? (
           <p>Loading question data...</p>
         ) : (
-          <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <form
+            onSubmit={handleSubmit}
+            className="grid grid-cols-1 md:grid-cols-2 gap-6"
+          >
             <div className="md:col-span-2">
-              <label className="block text-sm font-medium mb-1">
-                Category <span className="text-red-500">*</span>
-              </label>
-              <select
-                name="category_id"
-                value={formData.category_id}
-                onChange={handleChange}
-                className={`w-full border rounded px-3 py-2 bg-white ${fieldErrors.category_id ? "border-red-500" : ""}`}
-                disabled={loading}
-              >
-                <option value="">Select a category</option>
-                {categories.map((category) => (
-                  <option key={category.id} value={category.id}>
-                    {category.en_title}
-                  </option>
-                ))}
-              </select>
-              {fieldErrors.category_id && (
-                <p className="text-red-500 text-sm mt-1">{fieldErrors.category_id}</p>
-              )}
-            </div>
+  <label htmlFor="category_id" className="block text-sm font-medium mb-1">
+    Category <span className="text-red-500">*</span>
+  </label>
+  <select
+    id="category_id"
+    name="category_id"
+    value={formData.category_id}
+    onChange={handleChange}
+    className={`w-full border rounded px-3 py-2 bg-white ${
+      fieldErrors.category_id ? "border-red-500" : "border-gray-300"
+    }`}
+    disabled={loading}
+  >
+    <option value="">Select a category</option>
+    {categories.map((category) => (
+      <option key={category.id} value={category.id}>
+        {category.en_title}
+      </option>
+    ))}
+  </select>
+  {fieldErrors.category_id && (
+    <p className="text-red-500 text-sm mt-1">
+      {fieldErrors.category_id}
+    </p>
+  )}
+</div>
 
-            <div>
-              <label className="block text-sm font-medium mb-1">
-                Question (English)<span className="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                name="en_question"
-                value={formData.en_question}
-                onChange={handleChange}
-                className={`w-full border rounded px-3 py-2 ${fieldErrors.en_question ? "border-red-500" : ""}`}
-                placeholder="Enter question in English"
-                disabled={loading}
-              />
-              {fieldErrors.en_question && (
-                <p className="text-red-500 text-sm mt-1">{fieldErrors.en_question}</p>
-              )}
-            </div>
+<div>
+  <label htmlFor="en_question" className="block text-sm font-medium mb-1">
+    Question (English)<span className="text-red-500">*</span>
+  </label>
+  <input
+    type="text"
+    id="en_question"
+    name="en_question"
+    value={formData.en_question}
+    onChange={handleChange}
+    className={`w-full border rounded px-3 py-2 ${
+      fieldErrors.en_question ? "border-red-500" : "border-gray-300"
+    }`}
+    placeholder="Enter question in English"
+    disabled={loading}
+  />
+  {fieldErrors.en_question && (
+    <p className="text-red-500 text-sm mt-1">
+      {fieldErrors.en_question}
+    </p>
+  )}
+</div>
 
-            <div>
-              <label className="block text-sm font-medium mb-1">
-                Question (Odia)<span className="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                name="od_question"
-                value={formData.od_question}
-                onChange={handleChange}
-                className={`w-full border rounded px-3 py-2 ${fieldErrors.od_question ? "border-red-500" : ""}`}
-                placeholder="Enter question in Odia"
-                disabled={loading}
-              />
-              {fieldErrors.od_question && (
-                <p className="text-red-500 text-sm mt-1">{fieldErrors.od_question}</p>
-              )}
-            </div>
+<div>
+  <label htmlFor="od_question" className="block text-sm font-medium mb-1">
+    Question (Odia)<span className="text-red-500">*</span>
+  </label>
+  <input
+    type="text"
+    id="od_question"
+    name="od_question"
+    value={formData.od_question}
+    onChange={handleChange}
+    className={`w-full border rounded px-3 py-2 ${
+      fieldErrors.od_question ? "border-red-500" : "border-gray-300"
+    }`}
+    placeholder="Enter question in Odia"
+    disabled={loading}
+  />
+  {fieldErrors.od_question && (
+    <p className="text-red-500 text-sm mt-1">
+      {fieldErrors.od_question}
+    </p>
+  )}
+</div>
 
             <div className="md:col-span-2">
               <FormActions
