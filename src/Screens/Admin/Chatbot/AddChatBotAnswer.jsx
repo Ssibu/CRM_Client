@@ -6,6 +6,7 @@ import chatbotQuestionAPI from "../../../services/chatbotQuestionAPI";
 import { ModalDialog } from "../../../Components/Admin/Modal/MessageModal";
 import RichTextEditor from "@/Components/Admin/TextEditor/RichTextEditor";
 import FormActions from "@/Components/Admin/Add/FormActions";
+import { ArrowLeft } from "lucide-react";
 
 // NEW: Define the initial empty state as a constant for reusability.
 const INITIAL_FORM_STATE = {
@@ -196,17 +197,17 @@ const AddChatbotAnswer = () => {
   };
 
   return (
-    <div className="min-h-[80vh] py-6 font-sans">
-      <div className="p-6 bg-white shadow rounded-xl">
+    <div className="min-h-[80vh]">
+      <div className="p-4 bg-white shadow">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-xl font-semibold">
             {isEditMode ? "Edit Chatbot Answer" : "Add Chatbot Answer"}
           </h2>
           <button
             onClick={() => navigate("/admin/manage-chatbot/chatbot-answer")}
-            className="bg-yellow-400 hover:bg-yellow-500 text-black px-4 py-2 rounded"
+            className="bg-yellow-400 hover:bg-yellow-500 text-gray-800 px-4 py-2 rounded-md font-medium flex items-center gap-2 transition"
           >
-            ← Go Back
+            <ArrowLeft size={16} /> Go Back
           </button>
         </div>
 
@@ -222,82 +223,94 @@ const AddChatbotAnswer = () => {
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Category + Question */}
             <div className="grid grid-cols-2 gap-6">
-              {/* Category */}
-              <div>
-                <label className="block text-sm font-medium mb-1">
-                  Select Category <span className="text-red-500">*</span>
-                </label>
-                <select
-                  name="category_id"
-                  value={formData.category_id}
-                  onChange={handleChange}
-                  className={`w-full border rounded px-3 py-2 ${fieldErrors.category_id ? "border-red-500" : ""}`}
-                  disabled={loading}
-                >
-                  <option value="">-- Select Category --</option>
-                  {categories.map((cat) => (
-                    <option key={cat.id} value={cat.id}>{cat.en_title}</option>
-                  ))}
-                </select>
-                {fieldErrors.category_id && <p className="text-red-500 text-sm mt-1">{fieldErrors.category_id}</p>}
-              </div>
+  {/* Category */}
+  <div>
+    <label htmlFor="category_id" className="block text-sm font-medium mb-1">
+      Select Category <span className="text-red-500">*</span>
+    </label>
+    <select
+      id="category_id"
+      name="category_id"
+      value={formData.category_id}
+      onChange={handleChange}
+      className={`w-full border rounded px-3 py-2 bg-white ${
+        fieldErrors.category_id ? "border-red-500" : "border-gray-300"
+      }`}
+      disabled={loading}
+    >
+      <option value="">-- Select Category --</option>
+      {categories.map((cat) => (
+        <option key={cat.id} value={cat.id}>{cat.en_title}</option>
+      ))}
+    </select>
+    {fieldErrors.category_id && <p className="text-red-500 text-sm mt-1">{fieldErrors.category_id}</p>}
+  </div>
 
-              {/* Question */}
-              <div>
-                <label className="block text-sm font-medium mb-1">
-                  Select Question <span className="text-red-500">*</span>
-                </label>
-                <select
-                  name="question_id"
-                  value={formData.question_id}
-                  onChange={handleChange}
-                  className={`w-full border rounded px-3 py-2 ${fieldErrors.question_id ? "border-red-500" : ""}`}
-                  disabled={loading || !formData.category_id || questions.length === 0}
-                >
-                  <option value="">-- Select Question --</option>
-                  {questions.map((q) => (
-                    <option key={q.id} value={q.id}>{q.en_question}</option>
-                  ))}
-                </select>
-                {fieldErrors.question_id && <p className="text-red-500 text-sm mt-1">{fieldErrors.question_id}</p>}
-              </div>
-            </div>
+  {/* Question */}
+  <div>
+    <label htmlFor="question_id" className="block text-sm font-medium mb-1">
+      Select Question <span className="text-red-500">*</span>
+    </label>
+    <select
+      id="question_id"
+      name="question_id"
+      value={formData.question_id}
+      onChange={handleChange}
+      className={`w-full border rounded px-3 py-2 bg-white ${
+        fieldErrors.question_id ? "border-red-500" : "border-gray-300"
+      }`}
+      disabled={loading || !formData.category_id || questions.length === 0}
+    >
+      <option value="">-- Select Question --</option>
+      {questions.map((q) => (
+        <option key={q.id} value={q.id}>{q.en_question}</option>
+      ))}
+    </select>
+    {fieldErrors.question_id && <p className="text-red-500 text-sm mt-1">{fieldErrors.question_id}</p>}
+  </div>
+</div>
 
-            {/* Answer Fields with RichTextEditor */}
-            <div className="grid grid-cols-2 gap-6">
-              <div>
-                <label className="block text-sm font-medium mb-1">
-                  Answer (English) <span className="text-red-500">*</span>
-                </label>
-                <RichTextEditor
-                  value={formData.en_answer}
-                  onChange={(data) => {
-                    setFormData((prev) => ({ ...prev, en_answer: data }));
-                    if (fieldErrors.en_answer) {
-                      setFieldErrors((prev) => ({ ...prev, en_answer: "" }));
-                    }
-                  }}
-                  disabled={loading}
-                />
-                {fieldErrors.en_answer && <p className="text-red-500 text-sm mt-1">{fieldErrors.en_answer}</p>}
-              </div>
-              <div>
-                <label className="block text-sm font-medium mb-1">
-                  Answer (Odia) <span className="text-red-500">*</span>
-                </label>
-                <RichTextEditor
-                  value={formData.od_answer}
-                  onChange={(data) => {
-                    setFormData((prev) => ({ ...prev, od_answer: data }));
-                    if (fieldErrors.od_answer) {
-                      setFieldErrors((prev) => ({ ...prev, od_answer: "" }));
-                    }
-                  }}
-                  disabled={loading}
-                />
-                {fieldErrors.od_answer && <p className="text-red-500 text-sm mt-1">{fieldErrors.od_answer}</p>}
-              </div>
-            </div>
+{/* Answer Fields with RichTextEditor */}
+<div className="grid grid-cols-2 gap-6">
+  <div>
+    <label className="block text-sm font-medium mb-1">
+      Answer (English) <span className="text-red-500">*</span>
+    </label>
+    {/* Apply a border to the container of the RichTextEditor */}
+    <div className={`border rounded ${fieldErrors.en_answer ? 'border-red-500' : 'border-gray-300'}`}>
+      <RichTextEditor
+        value={formData.en_answer}
+        onChange={(data) => {
+          setFormData((prev) => ({ ...prev, en_answer: data }));
+          if (fieldErrors.en_answer) {
+            setFieldErrors((prev) => ({ ...prev, en_answer: "" }));
+          }
+        }}
+        disabled={loading}
+      />
+    </div>
+    {fieldErrors.en_answer && <p className="text-red-500 text-sm mt-1">{fieldErrors.en_answer}</p>}
+  </div>
+  <div>
+    <label className="block text-sm font-medium mb-1">
+      Answer (Odia) <span className="text-red-500">*</span>
+    </label>
+    {/* Apply a border to the container of the RichTextEditor */}
+    <div className={`border rounded ${fieldErrors.od_answer ? 'border-red-500' : 'border-gray-300'}`}>
+      <RichTextEditor
+        value={formData.od_answer}
+        onChange={(data) => {
+          setFormData((prev) => ({ ...prev, od_answer: data }));
+          if (fieldErrors.od_answer) {
+            setFieldErrors((prev) => ({ ...prev, od_answer: "" }));
+          }
+        }}
+        disabled={loading}
+      />
+    </div>
+    {fieldErrors.od_answer && <p className="text-red-500 text-sm mt-1">{fieldErrors.od_answer}</p>}
+  </div>
+</div>
 
             {/* CHANGED: Pass isEditMode and the new handleReset to FormActions */}
             <FormActions

@@ -102,7 +102,7 @@ const ChatbotAnswerListPage = () => {
     {
       header: "Actions",
       cell: ({ row }) => (
-        <div className="flex items-center justify-center space-x-3">
+        <div className="flex space-x-2">
 
           <button
             onClick={() => openModal(row.original)}
