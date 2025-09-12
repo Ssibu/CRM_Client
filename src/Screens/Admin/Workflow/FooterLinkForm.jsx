@@ -122,12 +122,13 @@ const FooterlinkForm = () => {
 
   return (
     <div
-      className="min-h-[80vh] bg-gray-50 p-6"
+      className="min-h-[80vh]"
     >
-      <Header title={isEditMode ? "Edit Footer Link" : "Add Footer Link"} onGoBack={handleGoBack} />
+   <div className="bg-white p-6 shadow"  >
+       <Header title={isEditMode ? "Edit Footer Link" : "Add Footer Link"} onGoBack={handleGoBack} />
 
       <form onSubmit={handleSubmit}>
-        <div className="bg-white p-6 rounded-lg shadow-md grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+        <div className=" grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
           <FormField 
             label="Link Text (In English)" 
             value={formData.en_link_text} 
@@ -173,6 +174,7 @@ const FooterlinkForm = () => {
           onReset={handleReset}
         />
       </form>
+   </div>
     </div>
   );
 };
