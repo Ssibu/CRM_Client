@@ -106,7 +106,7 @@ const ChatbotCategoryListPage = () => {
   ], [tableState.currentPage, tableState.entriesPerPage, navigate]);
 
   return (
-    <div className="p-6 min-h-[80vh]">
+    <div className="min-h-[80vh]">
       <MenuTable
         Ltext="Chatbot Categories"
         Rtext="Add Category"
