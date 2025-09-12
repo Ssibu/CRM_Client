@@ -159,7 +159,7 @@ const NoticeListPage = () => {
   );
 
   return (
-    <div className="p-6 min-h-[80vh]">
+    <div className="py-4 min-h-[80vh]">
       {/* 4. Update UI text and props for MenuTable */}
       <MenuTable
         Ltext="Notices"
