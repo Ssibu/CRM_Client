@@ -145,6 +145,7 @@ const GenerateLinkForm = () => {
             existingFileUrl={`${import.meta.env.VITE_API_BASE_URL}/uploads/generated-links/${existingFile}`}
             onFileChange={handleFileChange}
             maxSizeMB={2}
+            required="true"
           />
          </div>
 

@@ -9,10 +9,12 @@ const DocumentUploader = ({
     file,
     existingFileName,
     existingFileUrl,
+    required = false, 
     
     // --- Core Functional Props ---
     onFileChange,
     onRemove,
+    
 
     // --- Dynamic Configuration Props ---
     allowedTypes = ['application/pdf', 'image/jpeg', 'image/png'], // Default allowed types
@@ -70,7 +72,7 @@ const DocumentUploader = ({
         {label}
       </label>
        <p className="text-xs text-blue-500 mt-1">
-        Accepts: {allowedExtensions}. Max size: {maxSizeMB}MB.
+        Accepts: {allowedExtensions}. Max size: {maxSizeMB}MB.{required && <span className="text-sm font-medium text-red-500">*</span>}
       </p>
      </div>
       <input
