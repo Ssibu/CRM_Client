@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { FaEdit, FaCheck, FaFilePdf } from "react-icons/fa";
+import { FaEdit, FaCheck, FaFilePdf,FaTimes } from "react-icons/fa";
 import { IoClose } from "react-icons/io5";
 import { CheckCircle, XCircle } from "lucide-react";
 
@@ -142,7 +142,7 @@ const NoticeListPage = () => {
               }
               title={row.original.is_active ? "Deactivate" : "Activate"}
             >
-              {row.original.is_active ? <IoClose size={18} /> : <FaCheck />}
+              {row.original.is_active ? <FaTimes /> : <FaCheck />}
             </button>
              <button
               onClick={() => navigate(`edit/${row.original.id}`)}
