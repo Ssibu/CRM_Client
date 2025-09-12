@@ -153,7 +153,7 @@ const MenuTable = ({
     const totalPages = Math.ceil(totalItems / entriesPerPage);
 
     return (
-        <div className="p-4 bg-white shadow rounded-xl overflow-x-auto">
+        <div className="p-4 bg-white shadow overflow-x-auto">
             <TableHeader 
                 Ltext={Ltext} 
                 Rtext={Rtext} 

@@ -119,7 +119,7 @@ const BedStrength = () => {
   ], [tableState.currentPage, tableState.entriesPerPage, navigate,openToggleModal]);
 
   return (
-    <div className="min-h-[80vh] py-4 font-sans">
+    <div className="min-h-[80vh] font-sans">
       <MenuTable 
         Ltext="Bed Strength List" 
         Rtext="Add Record" 
