@@ -67,14 +67,15 @@ const DocumentUploader = ({
 
   return (
     <div>
-     <div className='flex gap-2' >  
-       <label className="block text-sm font-medium text-gray-700 mb-1">
-        {label}
-      </label>
-       <p className="text-xs text-blue-500 mt-1">
-        Accepts: {allowedExtensions}. Max size: {maxSizeMB}MB.{required && <span className="text-sm font-medium text-red-500">*</span>}
-      </p>
-     </div>
+     <div className='flex items-center gap-2 mb-1' >  {/* <-- Add items-center here */}
+  <label className="block text-sm font-medium text-gray-700"> {/* <-- Removed mb-1 */}
+    {label}
+  </label>
+  <p className="text-xs text-blue-500"> {/* <-- Removed mt-1 */}
+    Accepts: {allowedExtensions}. Max size: {maxSizeMB}MB.
+    {required && <span className="text-sm font-medium text-red-500">*</span>}
+  </p>
+</div>
       <input
         type="file"
         ref={fileInputRef}

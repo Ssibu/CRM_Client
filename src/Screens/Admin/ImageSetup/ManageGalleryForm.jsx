@@ -581,6 +581,7 @@ const ManageGallaryForm = () => {
             isSubmitting={isSubmitting}
             onCancel={handleCancel}
             onReset={handleReset}
+            isEditMode={isEditMode}
           />
         </form>
       </div>

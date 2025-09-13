@@ -169,6 +169,7 @@ const CorrigendumForm = ({
           </div>
         </div>
         <FormActions
+        isEditMode={isEditMode}
           onSubmit={handleSubmit}
           onReset={handleReset}
           onCancel={onCancel}

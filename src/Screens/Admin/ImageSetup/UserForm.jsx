@@ -639,6 +639,7 @@ const UserForm = () => {
 
           {/* ✅ Replaced Buttons with <FormActions /> */}
           <FormActions
+          isEditMode={isEditMode}
             isSubmitting={isSubmitting}
             onCancel={handleCancel}
             onReset={handleReset}

@@ -792,6 +792,7 @@ const VideoGalleryForm = () => {
             isSubmitting={isSubmitting}
             onCancel={handleCancel}
             onReset={handleReset}
+            isEditMode={Boolean(id)}
           />
         </form>
       </div>

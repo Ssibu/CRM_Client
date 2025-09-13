@@ -189,6 +189,7 @@ const HomePageBannerForm = () => {
           </div>
 
           <FormActions
+          isEditMode={isEditMode}
             isSubmitting={isSubmitting}
             onCancel={handleCancel}
             onReset={handleReset}

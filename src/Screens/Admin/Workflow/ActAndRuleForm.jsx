@@ -185,6 +185,7 @@ const ActAndRuleForm = () => {
         </div>
 
         <FormActions
+        isEditMode={isEditMode}
           onSubmit={handleSubmit}
           onCancel={handleGoBack}
           isSubmitting={isSubmitting}

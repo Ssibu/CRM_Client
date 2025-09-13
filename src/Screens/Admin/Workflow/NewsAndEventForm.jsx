@@ -233,6 +233,7 @@ const NewsAndEventForm = () => {
             />
           </div>
           <FormActions
+          isEditMode={isEditMode}
             onSubmit={handleSubmit}
             onCancel={() => navigate("/admin/workflow/news-and-events")}
             isSubmitting={isSubmitting}

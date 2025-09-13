@@ -115,7 +115,7 @@ const GenerateLinkForm = () => {
 
   return (
     <div className="min-h-[80vh]">
-      <div className="p-4 bg-white shadow">
+      <div className="p-6 bg-white shadow">
         <Header
           title={id ? "Edit File" : "Generate Link"}
           onGoBack={() => navigate("/admin/generate-link")}
@@ -151,6 +151,7 @@ const GenerateLinkForm = () => {
 
           {/* Actions */}
           <FormActions
+          isEditMode={Boolean(id)}
             disabled={isSubmitting}
             onReset={handleReset}
             onCancel={() => navigate("/admin/generate-link")}

@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useCallback, memo } from "react";
 import axios from "axios";
 import { useModal } from "@/context/ModalProvider";
@@ -6,6 +7,8 @@ import FormField from "@/Components/Admin/TextEditor/FormField";
 import DocumentUploader from "@/Components/Admin/TextEditor/DocumentUploader";
 import RichTextEditor from "@/Components/Admin/TextEditor/RichTextEditor";
 import { ImagePlus } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+
 
 const ImagePreview = memo(({ imageUrl, label }) => (
   <div>
@@ -49,6 +52,8 @@ const DirectorDeskPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [initialData, setInitialData] = useState(null);
   const [resetCounter, setResetCounter] = useState(0);
+  const navigate = useNavigate();
+
 
   const fetchData = useCallback(async () => {
     try {
@@ -125,38 +130,69 @@ const DirectorDeskPage = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!validateForm()) {
-      // showModal('error', 'Please fill all required fields.');
-      return;
-    }
-    setIsSubmitting(true);
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    const submissionData = new FormData();
-    Object.keys(formData).forEach((key) =>
-      submissionData.append(key, formData[key])
+  if (!validateForm()) {
+    // Optional: Show a generic client-side error if needed
+    // showModal('error', 'Please fill all required fields.');
+    return;
+  }
+
+  setIsSubmitting(true);
+
+  const submissionData = new FormData();
+
+  Object.keys(formData).forEach((key) => {
+    submissionData.append(key, formData[key]);
+  });
+
+  if (files.logo) submissionData.append("logo", files.logo);
+  if (files.photo) submissionData.append("photo", files.photo);
+
+  try {
+    await axios.patch(
+      `${import.meta.env.VITE_API_BASE_URL}/director-desk`,
+      submissionData,
+      {
+        headers: { "Content-Type": "multipart/form-data" },
+        withCredentials: true,
+      }
     );
-    if (files.logo) submissionData.append("logo", files.logo);
-    if (files.photo) submissionData.append("photo", files.photo);
 
-    try {
-      await axios.patch(
-        `${import.meta.env.VITE_API_BASE_URL}/director-desk`,
-        submissionData,
-        {
-          headers: { "Content-Type": "multipart/form-data" },
-          withCredentials: true,
-        }
-      );
-      showModal("success", "Director's Desk updated successfully!");
-      fetchData();
-    } catch (error) {
-      showModal("error", error.response?.data?.message || "Update failed.");
-    } finally {
-      setIsSubmitting(false);
+    showModal("success", "Director's Desk updated successfully!");
+    fetchData(); // Refresh data after successful update
+  } catch (error) {
+    const { response } = error;
+
+    let messageToShow = "Update failed.";
+
+    if (response?.status === 400) {
+      const { errors } = response.data;
+
+      if (errors && typeof errors === "object") {
+        // Convert error object into a string list
+        const errorList = Object.values(errors).map((msg) => `• ${msg}`);
+        messageToShow = errorList.join("\n");
+      } else {
+        // Use message if no error object
+        messageToShow = response.data.message || messageToShow;
+      }
+    } else {
+      // Other errors (network, 500, etc.)
+      messageToShow = response?.data?.message || error.message || messageToShow;
     }
-  };
+
+    showModal("error", messageToShow);
+  } finally {
+    setIsSubmitting(false);
+  }
+};
+
+const handleCancel = ()=>{
+  navigate("");
+}
+
 
   const handleReset = useCallback(() => {
     if (initialData) {
@@ -219,9 +255,9 @@ const DirectorDeskPage = () => {
                   handleFileChange(file, error, "logo")
                 }
                 error={errors.logo}
-                existingFileName={existingImages.logo}
+                // existingFileName={existingImages.logo}
                 allowedTypes={["image/jpeg", "image/png", "image/webp"]}
-                maxSizeMB={1}
+                maxSizeMB={10}
               />
               <ImagePreview
                 label="Current Logo"
@@ -278,9 +314,9 @@ const DirectorDeskPage = () => {
                   handleFileChange(file, error, "photo")
                 }
                 error={errors.photo}
-                existingFileName={existingImages.photo}
+                // existingFileName={existingImages.photo}
                 allowedTypes={["image/jpeg", "image/png", "image/webp"]}
-                maxSizeMB={1}
+                maxSizeMB={10}
               />
               <ImagePreview
                 label="Current Photo"
@@ -308,6 +344,12 @@ const DirectorDeskPage = () => {
               className="bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded-md transition-all"
             >
               Reset
+            </button>
+             <button
+              type="button"
+              className="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-md transition-all"
+            >
+              Cancel
             </button>
           </div>
         </form>

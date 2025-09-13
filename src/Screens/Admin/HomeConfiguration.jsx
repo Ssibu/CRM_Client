@@ -663,7 +663,7 @@ const HomeConfiguration = () => {
           </div>
           {/* Buttons */}
           <div className="flex items-center gap-4 mt-8">
-            <FormActions onReset={handleReset} />
+            <FormActions onReset={handleReset}  />
           </div>
         </form>
       </div>

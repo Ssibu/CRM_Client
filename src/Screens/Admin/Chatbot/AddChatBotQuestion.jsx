@@ -215,7 +215,7 @@ const AddChatBotQuestion = () => {
 
   return (
     <div className="min-h-[80vh]">
-      <div className="p-4 bg-white shadow">
+      <div className="p-6 bg-white shadow">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-xl font-semibold">{pageTitle}</h2>
           <button

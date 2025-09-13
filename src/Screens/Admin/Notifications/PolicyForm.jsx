@@ -167,6 +167,7 @@ const PolicyForm = () => {
             />
         </div>
         <FormActions
+        isEditMode={isEditMode}
           onSubmit={handleSubmit}
           onCancel={() => navigate("/admin/notifications/policy")}
           isSubmitting={isSubmitting}
