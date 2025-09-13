@@ -166,7 +166,7 @@ const TenderFormPage = () => {
               label="NIT Document"
               file={files.nit_doc}
               allowedTypes={["application/pdf"]}
-              maxSizeMB={1}
+              maxSizeMB={10}
               existingFileName={existingFileNames.nit_doc}
               existingFileUrl={existingFileNames.nit_doc ? `${import.meta.env.VITE_API_BASE_URL}/uploads/tenders/${existingFileNames.nit_doc}` : null}
               onFileChange={(file, error) => handleFileChange("nit_doc", file, error)}
@@ -178,7 +178,7 @@ const TenderFormPage = () => {
               label="Tender Document"
               file={files.doc}
               allowedTypes={["application/pdf"]}
-              maxSizeMB={1}
+              maxSizeMB={10}
               existingFileName={existingFileNames.doc}
               existingFileUrl={existingFileNames.doc ? `${import.meta.env.VITE_API_BASE_URL}/uploads/tenders/${existingFileNames.doc}` : null}
               onFileChange={(file, error) => handleFileChange("doc", file, error)}

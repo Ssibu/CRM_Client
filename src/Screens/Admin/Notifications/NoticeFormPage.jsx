@@ -166,7 +166,7 @@ const NoticeFormPage = () => {
               onRemove={handleRemoveFile}
               error={errors.doc}
               allowedTypes={["application/pdf"]}
-              maxSizeMB={1}
+              maxSizeMB={10}
               required="true"
               file={file} // Pass the new file object
               existingFileName={existingFileName}

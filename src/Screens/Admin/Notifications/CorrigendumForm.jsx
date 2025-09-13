@@ -163,7 +163,7 @@ const CorrigendumForm = ({
                     }/uploads/tenders/corrigendums/${existingFileName}`
                   : null
               }
-              maxSizeMB={1}
+              maxSizeMB={10}
               onRemove={handleRemoveFile}
             />
           </div>

@@ -159,7 +159,7 @@ const AdvertisementFormPage = () => {
                             error={errors.en_adphoto}
                             required="true"
                             allowedTypes={['image/jpeg', 'image/png', 'image/webp']}
-                            maxSizeMB={1}
+                            maxSizeMB={3}
                         />
                         <DocumentUploader
                             label="Odia Advertisement"
@@ -171,7 +171,7 @@ const AdvertisementFormPage = () => {
                             error={errors.od_adphoto}
                             required="true"
                             allowedTypes={['image/jpeg', 'image/png', 'image/webp']}
-                            maxSizeMB={1}
+                            maxSizeMB={3}
                         />
                     </div>
                     <div className="mt-6">
