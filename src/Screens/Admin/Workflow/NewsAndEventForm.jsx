@@ -222,9 +222,7 @@ const NewsAndEventForm = () => {
               onFileChange={handleFileChange}
               error={errors.document}
               allowedTypes={[
-                "application/pdf",
-                "application/msword",
-                "application/msexcel",
+                "application/pdf",'image/jpeg', 'image/png', 'image/webp'
               ]}
               maxSizeMB={1}
               existingFileName={existingDocumentName}
