@@ -116,7 +116,7 @@ const HolidayFormPage = () => {
     <div
       className="min-h-[80vh]"
     >
-    <div className="bg-white p-4 shadow">
+    <div className="bg-white p-6 shadow">
       <Header title={isEditMode ? "Edit Holiday" : "Add New Holiday"} onGoBack={() => navigate('/admin/notifications/holidays')} />
       <div className="">
         <form onSubmit={handleSubmit} noValidate>

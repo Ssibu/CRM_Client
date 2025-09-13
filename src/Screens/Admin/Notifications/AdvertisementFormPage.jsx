@@ -144,7 +144,7 @@ const AdvertisementFormPage = () => {
         <div
       className="min-h-[80vh]"
     >
-        <div className="bg-white p-4 shadow">
+        <div className="bg-white p-6 shadow">
             <Header title={isEditMode ? 'Edit Advertisement' : 'Add New Advertisement'} onGoBack={() => navigate('/admin/notifications/advertisements')} />
             <div className="">
                 <form onSubmit={handleSubmit} noValidate>

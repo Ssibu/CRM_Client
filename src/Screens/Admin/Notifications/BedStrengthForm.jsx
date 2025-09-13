@@ -166,7 +166,7 @@ const BedStrengthForm = () => {
     <div
       className="min-h-[80vh]"
     >
-    <div className="bg-white p-4 shadow">
+    <div className="bg-white p-6 shadow">
       <Header title={isEditMode ? "Edit Bed Strength" : "Add Bed Strength"} onGoBack={handleGoBack} />
 
       <form onSubmit={handleSubmit}>

@@ -144,7 +144,7 @@ const PolicyForm = () => {
     <div
       className="min-h-[80vh]"
     >
-    <div className="bg-white p-4 shadow">
+    <div className="bg-white p-6 shadow">
       <Header title={isEditMode ? "Edit Policy" : "Add Policy"} onGoBack={() => navigate("/admin/notifications/policy")} />
       <form onSubmit={handleSubmit}>
         <div className=" grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">

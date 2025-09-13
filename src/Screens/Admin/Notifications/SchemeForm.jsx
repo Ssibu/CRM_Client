@@ -163,7 +163,7 @@ const SchemeForm = () => {
     <div
       className="min-h-[80vh]"
     >
-    <div className="bg-white p-4 shadow">
+    <div className="bg-white p-6 shadow">
       <Header title={isEditMode ? "Edit Scheme" : "Add Scheme"} onGoBack={handleGoBack} />
 
       <form onSubmit={handleSubmit}>

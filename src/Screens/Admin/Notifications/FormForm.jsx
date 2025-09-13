@@ -161,7 +161,7 @@ const FormForm = () => {
     <div
       className="min-h-[80vh]"
     >
-    <div className="bg-white p-4 shadow">
+    <div className="bg-white p-6 shadow">
       <Header title={isEditMode ? "Edit Form" : "Add Form"} onGoBack={handleGoBack} />
 
       <form onSubmit={handleSubmit}>
