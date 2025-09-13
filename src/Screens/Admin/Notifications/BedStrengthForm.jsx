@@ -196,8 +196,8 @@ const BedStrengthForm = () => {
                   required="true"
                   
                   // Add Configuration
-                  allowedTypes={["application/pdf", "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"]}
-                  maxSizeMB={5}
+                  allowedTypes={["application/pdf"]}
+                  maxSizeMB={10}
                   
                   // Add props for handling existing files
                   existingFileName={existingDocument}

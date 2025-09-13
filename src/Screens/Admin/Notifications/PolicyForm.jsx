@@ -158,8 +158,8 @@ const PolicyForm = () => {
               onFileChange={handleFileChange}
               error={errors.document}
               // Configuration for Policy documents
-              allowedTypes={["application/pdf", "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"]}
-              maxSizeMB={5}
+              allowedTypes={["application/pdf",]}
+              maxSizeMB={10}
               // Props for managing existing files
               existingFileName={existingDocumentName}
               existingFileUrl={`${import.meta.env.VITE_API_BASE_URL}/uploads/policies/${existingDocumentName}`}
