@@ -304,6 +304,7 @@ const PageForm = () => {
 
           <FormActions
             onSubmit={handleSubmit}
+            isEditMode={isEditMode}
             onReset={handleReset}
             onCancel={handleCancel}
             isSubmitting={isSubmitting}

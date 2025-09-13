@@ -266,6 +266,7 @@ const UserForm = () => {
 
           <FormActions
             isSubmitting={isSubmitting}
+            isEditMode={isEditMode}
             onCancel={handleCancel}
             onReset={handleReset}
           />
