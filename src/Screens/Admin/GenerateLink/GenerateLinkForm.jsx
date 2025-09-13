@@ -122,7 +122,7 @@ const GenerateLinkForm = () => {
         />
 
         <form onSubmit={handleSubmit} className="space-y-6">
-         <div className="grid grid-cols-2" >
+         <div className="grid grid-cols-2 gap-6" >
            {/* Title */}
           <FormField
             label="Title"

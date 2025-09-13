@@ -165,7 +165,7 @@ const FormForm = () => {
       <Header title={isEditMode ? "Edit Form" : "Add Form"} onGoBack={handleGoBack} />
 
       <form onSubmit={handleSubmit}>
-        <div className=" grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+        <div className=" grid grid-cols-1 md:grid-cols-2 gap-6">
             <FormField 
               label="Title (In English)" 
               value={formData.en_title} 

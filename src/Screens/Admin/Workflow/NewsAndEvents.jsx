@@ -75,7 +75,7 @@ const NewsAndEvents = () => {
           if (['pdf'].includes(extension)) return <FaFilePdf className="text-red-500" size={22} />;
           if (['doc', 'docx'].includes(extension)) return <FaFileWord className="text-blue-500" size={22} />;
           if (['xls', 'xlsx'].includes(extension)) return <FaFileExcel className="text-green-700" size={22} />;
-          if (['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(extension)) return <FaFileImage className="text-green-500" size={22} />;
+          if (['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(extension)) return <FaFileImage className="text-yellow-500" size={22} />;
           return <FaFileAlt className="text-gray-500" size={22} />; // Fallback icon
         };
 

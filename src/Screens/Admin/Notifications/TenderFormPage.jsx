@@ -157,8 +157,8 @@ const TenderFormPage = () => {
       <div className="">
         <form onSubmit={handleSubmit} noValidate>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <FormField label="Title (English)" name="en_title" value={formData.en_title} onChange={(value) => handleChange("en_title", value)} placeholder="English title here" error={errors.en_title} required="true" />
-            <FormField label="Title (Odia)" name="od_title" value={formData.od_title} onChange={(value) => handleChange("od_title", value)} placeholder="Odia title here" error={errors.od_title} required="true"/>
+            <FormField label="Title (English)" maxLength={100} name="en_title" value={formData.en_title} onChange={(value) => handleChange("en_title", value)} placeholder="English title here" error={errors.en_title} required="true" />
+            <FormField label="Title (Odia)" maxLength={100} name="od_title" value={formData.od_title} onChange={(value) => handleChange("od_title", value)} placeholder="Odia title here" error={errors.od_title} required="true"/>
             <FormField label="Tender Date" name="date" type="date" value={formData.date} onChange={(value) => handleChange("date", value)} error={errors.date} required="true"/>
             <FormField label="Expiry Date" name="expiry_date" type="date" value={formData.expiry_date} onChange={(value) => handleChange("expiry_date", value)} error={errors.expiry_date} required="true"/>
             

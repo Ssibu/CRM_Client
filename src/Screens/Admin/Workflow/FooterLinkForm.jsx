@@ -136,7 +136,7 @@ const FooterlinkForm = () => {
        <Header title={isEditMode ? "Edit Footer Link" : "Add Footer Link"} onGoBack={handleGoBack} />
 
       <form onSubmit={handleSubmit}>
-        <div className=" grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+        <div className=" grid grid-cols-1 md:grid-cols-2 gap-6">
           <FormField 
             label="Link Text (In English)" 
             value={formData.en_link_text} 

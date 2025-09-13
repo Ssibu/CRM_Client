@@ -181,14 +181,14 @@ const NewsAndEventForm = () => {
     );
 
   return (
-    <div className="h-[80vh]">
+    <div className="min-h-[80vh]">
       <div className="bg-white p-6 shadow">
         <Header
           title={isEditMode ? "Edit News & Event" : "Add News & Event"}
           onGoBack={() => navigate("/admin/workflow/news-and-events")}
         />
         <form onSubmit={handleSubmit}>
-          <div className=" grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+          <div className=" grid grid-cols-1 md:grid-cols-2 gap-6">
             <FormField
               label="Event Title (In English)"
               placeholder="English title here"
