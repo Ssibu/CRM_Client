@@ -1,0 +1,17 @@
+.ck-editor__editable_inline {
+    min-height: 400px;
+}
+
+@media print {
+  body {
+    margin: 0 !important;
+  }
+}
+
+:root {
+  --ck-content-font-family: 'Lato';
+}
+
+.editor_container__word-count{
+  display: flex !important;
+}
