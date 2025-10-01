@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import lgnIllustartion2 from "@/assets/Login/lgnIll2.png";
 import lgnIllustartion3 from "@/assets/Login/lgnIll3.png";
 import lgnIllustartion1 from "@/assets/Login/lgnIll.png";
-
+ 
 const slides = [
   {
     title: "Enhance Impact in Healthcare",
