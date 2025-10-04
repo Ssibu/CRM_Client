@@ -5,7 +5,7 @@ import Footer from './Footer';
 
 const Layout = ({ children }) => {
   const [isSidebarOpen, setSidebarOpen] = useState(window.innerWidth >= 768);
-  const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth < 768);
+  const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth < 768); 
 
   const toggleSidebar = () => {
     setSidebarOpen(!isSidebarOpen);
