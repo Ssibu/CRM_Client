@@ -1,6 +1,6 @@
 import React from "react";
 import { FaRobot, FaTimes, FaExpand, FaCompress } from "react-icons/fa";
-
+ 
 const ChatHeader = ({ isMaximized, onToggleMax, onClose }) => (
   <header
     className="bg-gradient-to-r from-[#4e51e5] from-[1%] to-[#fbcf7dfa] to-[100%]  text-white p-4 flex items-center justify-between shadow-md"
