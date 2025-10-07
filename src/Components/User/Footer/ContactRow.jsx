@@ -3,7 +3,7 @@ import { COLORS } from "./constants";
 
 const ContactRow = ({ icon: Icon, children, as = "span", href }) => {
   const Comp = href ? "a" : as;
-  return (
+  return ( 
     <li className="flex items-start gap-3">
       <Icon
         className="mt-1 shrink-0"
