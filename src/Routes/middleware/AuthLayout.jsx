@@ -5,7 +5,7 @@
 
 // const AuthLayout = ({ children }) => {
 //   const { user, loading } = useContext(AuthContext);
-//   const navigate = useNavigate();
+//   const navigate = useNavigate(); 
 
 
 //   useEffect(() => {
